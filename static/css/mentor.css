@@ -1,0 +1,435 @@
+/* MENTOR — GÖRSEL SİSTEM YENİLEMESİ (10.09)
+   =========================================================================
+   ŞİKÂYET: "göze hitap etmiyor". Haklıydı, ve sebebi renk değildi.
+
+   Eski sayfada üç ölçülebilir sorun vardı:
+
+   1. HİYERARŞİ YOKTU. Yedi KPI kutusu yan yana, aynı boyda, aynı yazı
+      büyüklüğünde. Yedi şey aynı anda bağırınca hiçbiri duyulmaz; göz
+      nereye bakacağını bilemez ve hepsini tek tek okumak zorunda kalır.
+      Bir arayüzün "sade" görünmesi az bilgi taşımasından değil, bilginin
+      SIRALANMIŞ olmasından gelir.
+
+   2. NEFES ALANI YOKTU. Panel dolgusu 10-13 piksel, boşluklar 9 piksel,
+      gövde yazısı 10-11,5 piksel. Her şey kenarlığa yapışıktı. Referans
+      tasarımların "pahalı" duruşu tipografiden değil, DOLGUDAN geliyor.
+
+   3. ÜÇ SÜTUN ÇOK DARDI. 1440 piksellik bir ekranda 246 + 300 piksellik
+      iki yan sütun, ortadaki asıl işe 500 piksel bırakıyordu. Üç sütunun
+      üçü de sıkışıktı; radar tablosunun sağ kolonu kırpılıyordu.
+
+   ÇÖZÜM: bir ölçek ve ona sadık kalmak.
+     dolgu   16 / 18 / 20      (eskiden 10 / 12 / 13)
+     boşluk  14                (eskiden 9)
+     ölçek   34 → 20 → 13,5 → 12 → 10  (eskiden hepsi 10-19 arası)
+     sütun   ana + 340 raf     (eskiden 246 + orta + 300)
+
+   Renk hâlâ yalnızca VERİ için: yeşil/kırmızı sadece yön ve kâr-zarara
+   ayrılmış. Bir panelin önemli olduğunu renkle değil boşlukla söylüyoruz.
+   ========================================================================= */
+
+/* ---- ÜST BANT --------------------------------------------------------- */
+.mhero{display:grid;grid-template-columns:1.45fr 1.1fr 1.15fr 1.15fr 1.05fr;
+  gap:12px;margin-bottom:14px}
+.mhero__ana,.mstat{position:relative;overflow:hidden;
+  border:1px solid var(--border);border-radius:var(--r-xl);
+  background:var(--panel);padding:16px 18px;min-width:0}
+.mhero__ana>span,.mstat>span{display:block;font-size:10px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+
+/* BTC BİRİNCİ — diğer her şeyin bağlamı o. Bir altcoinin bir saatlik
+   getirisinin büyük kısmı o coinle değil BTC'yle ilgili. */
+.mhero__ana{background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.008) 55%);
+  border-color:var(--border-strong)}
+.mhero__ana>b{display:block;margin-top:9px;font-size:30px;line-height:1.06;
+  font-weight:600;letter-spacing:-.028em;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.mhero__ana>i{display:block;margin-top:7px;font-style:normal;font-size:11.5px;
+  color:var(--ink-3)}
+.mhero__ana--ik{background:linear-gradient(150deg,rgba(255,255,255,.045),rgba(255,255,255,.01) 52%);
+  border-color:var(--border)}
+.mhero__ana--ik>b{font-size:24px}
+
+.mstat>b{display:block;margin-top:9px;font-size:19px;line-height:1.15;
+  font-weight:600;letter-spacing:-.02em;color:var(--ink);
+  font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis}
+.mstat>i{display:block;margin-top:6px;font-style:normal;font-size:10.5px;
+  line-height:1.45;color:var(--ink-3)}
+.mstat--rejim>b{font-size:16px;letter-spacing:-.005em;white-space:normal}
+.mstat--ls>b{font-size:18px}
+.mstat__alt{display:flex;gap:14px;margin-top:9px;padding-top:9px;
+  border-top:1px solid rgba(255,255,255,.06)}
+.mstat__alt>span{font-size:10px;color:var(--ink-3);white-space:nowrap}
+.mstat__alt b{display:inline;font-size:10.5px;color:var(--ink-2);font-weight:600}
+
+.mhero__ana>b.up,.mhero__ana>i.up,.mstat>b.up,.mstat>i.up{color:var(--up)}
+.mhero__ana>b.down,.mhero__ana>i.down,.mstat>b.down,.mstat>i.down{color:var(--down)}
+
+.lsbar{height:4px;border-radius:2px;margin-top:9px;background:rgba(229,103,125,.3);
+  overflow:hidden}
+.lsbar>i{display:block;height:100%;background:var(--up);border-radius:2px}
+
+/* 1360'ta bes sutundan uce dusuyordu ve ikinci sirada iki kart yan
+   yana gerilip dengesiz bir bosluk birakiyordu. Bes sutunu KORUYUP
+   yaziyi kucultmek daha iyi: hiyerarsi bozulmuyor, tek satirda
+   kaliyor. Uce dusme esigi asagi indi. */
+@media(max-width:1400px){
+  .mhero{gap:10px}
+  .mhero__ana,.mstat{padding:14px 15px}
+  .mhero__ana>b{font-size:25px}
+  .mhero__ana--ik>b{font-size:21px}
+  .mstat>b{font-size:17px}
+  .mstat--rejim>b{font-size:15px}
+  .mstat>i,.mhero__ana>i{font-size:10px}
+}
+@media(max-width:1150px){
+  .mhero{grid-template-columns:repeat(3,minmax(0,1fr));gap:11px}
+  .mhero__ana>b{font-size:24px}
+}
+@media(max-width:820px){
+  .mhero{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mhero__ana,.mstat{padding:14px 15px}
+  .mhero__ana>b{font-size:23px}
+}
+@media(max-width:430px){
+  .mhero{grid-template-columns:1fr}
+}
+
+/* ---- İKİ SÜTUN --------------------------------------------------------
+   Üç sütun 1440'ta ortadaki asıl işe yalnızca ~500 piksel bırakıyordu.
+   Radar sağ rafa indi: asıl iş ortadaki tablo, radar ona bakarken göz
+   ucuyla izlenen şey. Eşik 1240 — altında raf alta iniyor. */
+/* SAYFA ARTIK NORMAL KAYIYOR — bilinçli bir geri adım.
+
+   Eski terminal düzeni `.tterm`i `flex:1; min-height:0` ile ekran
+   yüksekliğine ZORLUYORDU: hiçbir şey kaymasın, her şey aynı anda
+   görünsün diye. Üç dar sütunla bu tutuyordu.
+
+   Radar sağ rafa taşınınca tutmadı: raf (açık işlem + radar) 705
+   piksel, ekranda kalan yer ~500. Fark kayıp olmuyor — dışarı TAŞIYOR
+   ve araç şeridinin üstüne biniyordu. Ekran görüntüsünde görünen şey
+   buydu.
+
+   İki seçenek vardı: rafı kısaltmak ya da kaydırmayı kabul etmek.
+   Rafı kısaltmak radarı 6-7 satıra indirmek demekti; radarın işi
+   evrenin nabzını göstermek, altı satırla bunu yapamaz. Sayfa
+   kaydırması, bilginin kırpılmasından ucuzdur. */
+@media(min-width:1240px){
+  /* align-items:start İDİ ve altında kocaman bir boşluk bırakıyordu.
+     Sağ raf (açık işlem + radar) ana sütundan uzun; `start` ile plan
+     paneli içeriği kadar kalıp satırın geri kalanını boş bırakıyordu.
+     `stretch` ile panel satırı dolduruyor, gövdesi büyüyor ve liste
+     kısayken bile kart "yarım kalmış" görünmüyor. */
+  .tterm__grid{display:grid;grid-template-columns:minmax(0,1fr) 340px;
+    gap:14px;align-items:start;flex:0 0 auto;min-height:auto}
+  .tterm__grid > .tp--orta{display:flex;flex-direction:column}
+  .tterm__grid > .tp--orta .tp__body{flex:0 0 auto}
+  .tterm__raf{display:grid;gap:14px;min-width:0;align-content:start}
+    /* Iki ana karttan sonra sag raf yeni satira iner; tek kolonda
+      birakilinca ekranin sag yarisi bos kalir. Rafi satirin tamaminda
+      birlestir, icindeki iki paneli yan yana dagit. */
+    .tterm__grid > .tterm__raf{grid-column:1 / -1;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+  /* 520 idi: bes satirlik bir listede kartin altinda kocaman bir
+     bosluk kaliyordu ve panel "yarim kalmis" gibi duruyordu. 260,
+     yalnizca yukleme durumunun (tek satir "taraniyor...") duzeni
+     ziplatmasini engelleyecek kadar. */
+  .tp--orta{min-height:0}
+  /* Panel gövdeleri artık kendi içlerinde kaymıyor; sayfa kayıyor.
+     İç içe iki kaydırıcı, farenin tekerleğini hangisinin yiyeceğini
+     tahmin edilemez yapar. */
+  .tterm .tp--orta .tp__body,.tterm .tp--sag .tp__body{overflow:visible;
+    flex:0 0 auto}
+}
+/* ================================================================
+   KAYDIRMA HATASI — GERÇEK KÖKÜ (10.09, ikinci deneme)
+
+   İlk seferde `.main`e `min-height:0` ekledim ve testte "kayıyor"
+   çıktı. Ama Mentor sayfası hâlâ kaymıyordu, çünkü kök burada değildi:
+
+     workspace-live.css:626
+     .workspace[data-page="mentor"]{ ... height:100%; OVERFLOW:HIDDEN }
+
+   Bu kural eski terminal düzeninden kalma: "sayfa kabuğu kaydırmasın,
+   sütunlar kaydırsın". Üç dar sütun ekrana sığdığı sürece doğruydu.
+
+   Radar sağ rafa taşınınca ve altına veri şeridi eklenince içerik
+   ekrana sığmaz oldu — ve `overflow:hidden` fazlalığı ÇUBUK BİLE
+   GÖSTERMEDEN kesti. Kullanıcının gördüğü şey buydu: alttaki her şey
+   yok, sağda çubuk yok. Diğer sayfalarda çubuk çıkıyordu çünkü bu
+   kural yalnızca Mentor'a bakıyor — teşhisi veren ipucu da buydu.
+
+   Özgüllük notu: `.workspace[data-page="mentor"]` (0,2,0). Buradaki
+   kural `.main` ile birlikte yazıldı (0,3,0) ki medya sorgusunun içinde
+   olup olmaması fark etmesin.
+   ================================================================ */
+/* DÜZELTMENİN DÜZELTMESİ: `overflow:visible` DEĞİL, `auto`.
+   İlk denemede `visible` yazdım; o da kaydırmıyor — yalnızca taşmayı
+   ebeveyne devrediyor ve `body{overflow:hidden}` yine kesiyor. Kaydırma
+   kabı `.main`in KENDİSİ, dolayısıyla `overflow-y:auto` olmak zorunda.
+   `height` flex'e bırakılıyor (flex:1 + min-height:0 zaten var). */
+.main.workspace[data-page="mentor"]{height:auto;
+  overflow-y:auto;overflow-x:hidden;padding-bottom:28px}
+.tterm{flex:0 0 auto;min-height:auto}
+
+/* RADAR YÜKSEKLİĞİ — kartın DIŞINA taşıyordu.
+   workspace-live.css'te `.tp__body` 1180px medya sorgusu içinde
+   `flex:1; min-height:0; overflow-y:auto` alıyor. Ama `.tp` sabit
+   yükseklikli bir kapsayıcının çocuğu olmadığı için `flex:1`in
+   hesaplayacak bir şeyi yok: gövde içeriği kadar uzuyor ve liste
+   kartın altından taşıp araç şeridinin üstüne biniyordu.
+
+   Çözüm yüksekliği GÖVDEYE değil KARTA vermek: kart sınırlanınca
+   `flex:1` gerçek bir sayı buluyor ve gövde kendi içinde kayıyor.
+   Medya sorgusunun dışında, çünkü sorun genişliğe değil düzene ait. */
+/* Radar TEK istisna: evren ~500 kontrat, hepsini sayfaya dökmek
+   sayfayı metrelerce uzatırdı. Kart sınırlı, gövdesi kendi içinde
+   kayıyor. */
+.tterm__raf .tp--radar{max-height:460px}
+.tterm__raf .tp--radar .tp__body{flex:1;min-height:0;overflow-y:auto}
+@media(min-width:1240px){
+  .tterm__grid > .tterm__raf .tp--sag,
+  .tterm__grid > .tterm__raf .tp--radar{min-height:260px;max-height:360px}
+}
+/* ÖLÇÜLMÜŞ HATA (10.09): 1180'de plan tablosu 6 kolona düşüyordu.
+   workspace-live.css'te ÜÇ sütunlu iki kural var:
+     @media(min-width:1180px)               -> 246px 1fr 300px
+     @media(1180-1420px)                    -> 206px 1fr 252px
+   Radar sağ rafa taşınınca ızgarada artık İKİ çocuk var; üç sütunluk
+   şablonda plan paneli 206 piksellik ilk sütuna düşüyor ve tablo en dar
+   moduna geçiyordu. Ekranda görünen şey "1180'de tablo bozuldu" olurdu.
+   Eski kuralları silmek yerine burada kapsıyoruz: o dosya dashboard'ı da
+   besliyor ve oradaki düzen hâlâ üç sütunlu. */
+@media(min-width:1180px) and (max-width:1239px){
+  .tterm__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+}
+@media(max-width:1179px){
+  .tterm__grid{display:grid;grid-template-columns:minmax(0,1fr);gap:14px}
+}
+@media(max-width:1239px){
+  .tterm__raf{display:grid;gap:14px}
+  .tterm__raf .tp--radar{max-height:none}
+  .tterm__raf .tp--radar .tp__body{max-height:420px}
+}
+
+/* ---- PANEL: NEFES ALANI -----------------------------------------------
+   Asıl fark burada. Dolgu 10-13'ten 16-20'ye çıktı; başlık 13'ten
+   13,5'e ama ARALIĞI iki katına. Aynı bilgi, aynı yerde, okunur hâlde. */
+.tterm{gap:14px}
+.tp{border-radius:var(--r-xl)}
+.tp__head{padding:14px 18px;gap:12px}
+.tp__ad{font-size:13.5px;font-weight:600;letter-spacing:-.005em}
+.tp__ad .tag{margin-left:8px;font-size:10px;padding:2px 7px;border-radius:5px;
+  background:rgba(255,255,255,.06);color:var(--ink-3);font-weight:500;
+  letter-spacing:.02em}
+.tp__seg{padding:14px 18px 0}
+/* NOT: workspace-live.css'te bu dolgular 1180px medya sorgusu ICINDE
+   yeniden tanimlaniyor (.tp--orta .tp__body dahil). Ayni ozgullukte
+   olsalar kaynak sirasi bizi kazandirirdi ama .tp--orta .tp__body iki
+   sinifli, yani daha ozgul. Bu yuzden burada da ayni ozgullukle
+   yaziyoruz — !important yerine es ozgulluk, cunku !important bir
+   sonraki kisiyi ayni tuzaga dusurur. */
+.tp__body{padding:16px 18px}
+.tterm .tp__body{padding:16px 18px}
+.tterm .tp--orta .tp__body{padding:16px 18px 20px}
+.tterm .tp--sag .tp__body,.tterm .tp--radar .tp__body{padding:14px 16px}
+
+/* Segment düğmeleri: dokunma hedefi 26'dan 30'a. 26 piksel bir düğme
+   için fare hassasiyetinin sınırında; dokunmatikte altında. */
+.tp__head .seg button,.tp__seg .seg button{min-height:30px;padding:0 12px;
+  font-size:11px;letter-spacing:.03em}
+
+/* ---- ARAÇ ŞERİDİ: SESSİZLEŞTİ ----------------------------------------
+   Sekiz renkli hap yan yana, sayfanın en görünür yerinde duruyordu.
+   Hepsi ikincil eylem: göze ilk çarpan şey olmamalılar. Renk yalnızca
+   AÇIK olana kaldı. */
+.aracbar{gap:8px;margin-top:14px;margin-bottom:14px;
+  padding-top:14px;border-top:1px solid var(--border)}
+.aracbar__c{padding:8px 12px;border-radius:8px;color:var(--ink-3)}
+.aracbar__c svg{color:var(--ink-3)}
+.aracbar__c b{font-size:11.5px;font-weight:500}
+.aracbar__c:hover svg{color:var(--ak,var(--ink-2))}
+.aracbar__c.is-acik svg{color:var(--ak)}
+
+/* ---- RADAR TABLOSU: KIRPILMA DÜZELTMESİ -------------------------------
+   ÖLÇÜLMÜŞ HATA: dar sütunda son kolon ("24S") kırpılıyordu — ekranda
+   "+1", "-" gibi yarım sayılar görünüyordu. Yarım bir sayı yanlış bir
+   sayıdır: kullanıcı onu okur ve yanlış hatırlar. Kolon artık sabit
+   genişlikte ve taşarsa satır kaydırılabiliyor. */
+.radar-satir,.radar__satir{gap:8px}
+/* NOT: burada bir sure `#radarListe{overflow-x:auto}` vardi ve KALDIRILDI.
+   CSS'te bir eksende `visible` disinda bir deger vermek digerini de
+   otomatik olarak `auto` yapiyor; sonuc, zaten kayan gövdenin icinde
+   IKINCI bir kaydirma alani oldu. Ic ice iki kaydirici, farenin
+   tekerlegini hangisinin yiyecegini tahmin edilemez yapar. Radar
+   tablosu zaten tasmiyor (olculdu); ihtiyac yoktu. */
+
+/* ---- DURUM ÇUBUĞU ----------------------------------------------------- */
+.tbar{padding:12px 18px;border-radius:var(--r-xl);font-size:11px}
+
+/* ---- BOŞ DURUMLAR ----------------------------------------------------
+   "yükleniyor…" ve "işlem yok" en sık görülen iki ekran. Sıkışık bir
+   boş durum, sistemi bozukmuş gibi gösteriyor. */
+.tp .empty{padding:26px 16px;font-size:12.5px;line-height:1.7;
+  color:var(--ink-3);text-align:center}
+
+/* FİYAT DEĞİŞİM VURGUSU — blok değil renk.
+   Genel `flashUp/flashDown` animasyonu ARKA PLAN rengini değiştiriyor.
+   Küçük bir tablo hücresinde bu iyi çalışıyor; 30 piksellik bir başlık
+   sayısının arkasında tam genişlikte gri bir dikdörtgen bırakıyor ve
+   ekran görüntüsünde bir hata gibi duruyor. Burada aynı bilgiyi metin
+   rengiyle veriyoruz: sayı bir an yeşile/kırmızıya dönüp geri geliyor. */
+.mhero__ana>b.tick-flash-up,.mhero__ana>b.tick-flash-down{
+  animation:none;background:transparent}
+/* TİK PARLAMASI KALDIRILDI — ölçülmüş bir sebeple.
+   Parlama 0,55 saniye sürüyor; demo yayını 0,35 saniyede bir tik
+   gönderiyor (binance_ws.py:132), gerçek Binance aggTrade akışı daha da
+   sık. Yani animasyon hiçbir zaman bitmiyordu: "kıpırdadı" demesi
+   gereken geçici vurgu, rakamın arkasında KALICI gri bir hap hâline
+   geliyordu. Ekran görüntülerinin hepsinde görünmesi buydu.
+
+   Önce metni boyuyordu (rakam sürekli yeşil/kırmızı), sonra zemini
+   (sürekli gri hap). İkisi de aynı kök sebebin belirtisiydi: tik
+   aralığından uzun bir animasyon.
+
+   Canlılık sinyali zaten var ve daha dürüst: rakamın kendisi saniyede
+   birkaç kez değişiyor, üst şeritteki bağlantı noktası nabız atıyor. */
+.mhero__ana>b.tick-flash-up,.mhero__ana>b.tick-flash-down{
+  animation:none; background:transparent;
+}
+
+/* ---- KARŞILAMA --------------------------------------------------------
+   Sayfanın kimliğini sistem etiketi yerine bir cümle veriyor. Başlık
+   büyük ama BAĞIRMIYOR: 26 piksel, normal ağırlık aralığında. Sayfadaki
+   en büyük sayı hâlâ BTC — karşılama onunla yarışmamalı. */
+.msel{min-width:0}
+.msel__ad{margin:0;font-size:26px;line-height:1.15;font-weight:600;
+  letter-spacing:-.022em;color:var(--ink)}
+.msel__alt{margin:7px 0 0;font-size:13px;line-height:1.6;color:var(--ink-2)}
+.msel__ince{display:block;font-size:12px;color:var(--ink-3);margin-top:2px}
+.msel__ozet{font-size:12px;color:var(--ink-3);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+@media(max-width:820px){
+  .msel__ad{font-size:22px}
+  .msel__ozet{display:none}
+}
+
+/* ---- ARAÇLAR: BUTON YIĞINI → SAKİN SEGMENT --------------------------
+   Sekiz renkli hap, sayfanın en görünür yerinde, hepsi ikincil eylem.
+   Renk artık yalnızca AÇIK olanda; kapalıyken hepsi aynı sessiz tonda.
+   Şerit bir başlıkla ayrıldı: "araç" olduklarını söylemek, onları
+   karar alanından ayırmanın en ucuz yolu. */
+.aracbar{position:relative}
+.aracbar::before{content:"Araçlar";position:absolute;top:-9px;left:0;
+  font-size:9px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3)}
+.aracbar{padding-top:24px}
+.aracbar__c{background:rgba(255,255,255,.028);border-color:var(--border)}
+/* Açık araç rengi değil YÜZEYİ değiştiriyor — nav sekmesiyle aynı
+   kural. Doygun renk chrome'da kullanılmıyor. */
+.aracbar__c.is-acik{background:var(--surface-2);
+  border-color:var(--border-strong);color:#fff}
+.aracbar__c.is-acik svg,.aracbar__c.is-acik b{color:#fff}
+.aracbar__r{background:rgba(255,255,255,.07);color:var(--ink-3)}
+.aracbar__c.is-acik .aracbar__r{background:var(--surface-3);color:var(--ink-2)}
+
+/* ---- PLAN SATIRI: "KESİN SİNYAL" GÖRÜNMESİN -------------------------
+   Zamanlama rozeti tek eylem çağrısı; kalanı bağlam. ŞİMDİ yeşil ama
+   dolgusuz — dolgulu yeşil bir düğme "bas ve gir" der. */
+.ptr .gz--simdi{background:transparent;border:1px solid rgba(90,200,140,.42);
+  color:var(--up)}
+.ptr .gz--bekle{background:transparent;border:1px solid rgba(240,163,94,.42);
+  color:#f0a35e}
+.ptr .gz--gec{background:transparent;border:1px solid rgba(229,103,125,.42);
+  color:var(--down)}
+
+/* ---- VERİ ŞERİDİ ------------------------------------------------------
+   Plan tablosunun altındaki boşluk gerçek veriyle dolduruldu. Üçü de
+   mevcut uçlardan; hiçbiri örnek/sahte değil. Bir uç boş dönerse panel
+   bunu SÖYLÜYOR — boş bir tablo "veri yok" demek değil, "bilmiyorum"
+   demektir ve ikisi farklı şeylerdir. */
+.vser{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:14px;
+  margin-top:14px;align-items:start}
+.vser__ana,.vser__yan{min-width:0}
+
+/* Karne başlığı — sayı değil kanıt. */
+.vser__stat{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:10px;padding:14px 18px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.018)}
+.vser__k{min-width:0}
+.vser__k>span{display:block;font-size:9.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis}
+.vser__k>b{display:block;margin-top:5px;font-size:16px;font-weight:600;
+  letter-spacing:-.015em;color:var(--ink);font-variant-numeric:tabular-nums}
+.vser__k>b.up{color:var(--up)}
+.vser__k>b.down{color:var(--down)}
+.vser__not{grid-column:1/-1;margin-top:4px;font-size:10.5px;line-height:1.55;
+  color:var(--ink-3)}
+.vser__not b{color:var(--ink-2)}
+/* Yetersiz örneklemde ŞERİDİN TAMAMI soluklaşıyor: on işlemlik bir
+   "isabet %70", altmış işlemlikle aynı parlaklıkta durmamalı. */
+.vser__stat.is-zayif .vser__k>b{opacity:.45}
+.vser__bos{grid-column:1/-1;font-size:12px;color:var(--ink-3);line-height:1.6}
+
+/* Kapanmış işlem satırları */
+.vser__bas,.vser__s{display:grid;
+  grid-template-columns:minmax(0,1fr) 84px 64px minmax(0,110px) 76px;
+  gap:10px;align-items:center;padding:8px 18px}
+.vser__bas{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);border-bottom:1px solid var(--border)}
+.vser__bas span:nth-child(3),.vser__bas span:nth-child(5){text-align:right}
+.vser__s{border-bottom:1px solid rgba(255,255,255,.04);
+  font-variant-numeric:tabular-nums}
+.vser__s:last-child{border-bottom:0}
+.vser__sym{display:flex;align-items:center;gap:7px;min-width:0}
+.vser__sym b{font-size:12px;color:var(--ink);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.vser__yon{font-style:normal;font-size:8.5px;font-weight:700;letter-spacing:.04em;
+  padding:1px 5px;border-radius:4px}
+.vser__yon.up{background:rgba(90,200,140,.15);color:var(--up)}
+.vser__yon.down{background:rgba(229,103,125,.15);color:var(--down)}
+/* R çubuğu: sayıyı okumadan büyüklük görünüyor. 3R'de doyuyor —
+   daha geniş ölçek tek bir aykırı işlemi bütün satırları ezecek
+   kadar büyütürdü. */
+.vser__cub{height:4px;border-radius:2px;background:rgba(255,255,255,.06);
+  overflow:hidden}
+.vser__cub>i{display:block;height:100%;border-radius:2px;
+  background:var(--ink-3)}
+.vser__cub>i.up{background:var(--up)}
+.vser__cub>i.down{background:var(--down)}
+.vser__r{text-align:right;font-size:12.5px;font-weight:600}
+.vser__r.up{color:var(--up)}
+.vser__r.down{color:var(--down)}
+.vser__et{font-size:10.5px;color:var(--ink-3);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.vser__tar{text-align:right;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+
+/* Piyasa liderleri */
+.vser__l{display:grid;grid-template-columns:minmax(0,1fr) auto 72px;gap:10px;
+  align-items:center;padding:9px 16px;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  font-variant-numeric:tabular-nums}
+.vser__l:last-child{border-bottom:0}
+.vser__l:hover{background:rgba(255,255,255,.03)}
+.vser__lf{font-size:11.5px;color:var(--ink-2)}
+.vser__ld{text-align:right;font-size:12px;font-weight:600;color:var(--ink-2)}
+.vser__ld.up{color:var(--up)}
+.vser__ld.down{color:var(--down)}
+.vser__yan .tp__body{padding:0}
+
+@media(max-width:1239px){
+  .vser{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:900px){
+  .vser__stat{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:560px){
+  .vser__stat{grid-template-columns:repeat(2,minmax(0,1fr));padding:13px}
+  .vser__bas,.vser__s{grid-template-columns:minmax(0,1fr) 58px 68px;
+    padding-left:13px;padding-right:13px}
+  .vser__bas span:nth-child(2),.vser__s .vser__cub,
+  .vser__bas span:nth-child(4),.vser__s .vser__et{display:none}
+  .vser__bas span:nth-child(3){text-align:right}
+}

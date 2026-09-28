@@ -1,0 +1,18 @@
+/* Quiet text navigation: no left rail, pills, icon blocks or drawer. */
+.app{flex-direction:column}
+.ray.text-nav,html[data-rail="icon"] .ray.text-nav{position:static;transform:none;transition:none;width:100%;max-width:none;flex:0 0 auto;display:flex;flex-direction:row;align-items:center;gap:24px;padding:0 24px;height:44px;min-height:44px;overflow:hidden;background:transparent;border:0;border-bottom:1px solid #202020;z-index:auto}
+.text-nav__brand{flex:0 0 auto;font-size:10px;font-weight:600;letter-spacing:.15em;color:#888}
+.text-nav .ray__menu{flex:1 1 auto;min-width:0;min-height:44px;display:flex;flex-direction:row;align-items:center;gap:22px;margin:0;padding:0;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;touch-action:pan-x;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+.text-nav .rail__item{flex:0 0 auto;display:flex;align-items:center;width:auto!important;min-height:44px;height:44px;padding:0!important;border:0;border-radius:0;background:transparent;font-size:11px;font-weight:400;color:#898989;white-space:nowrap;box-shadow:none}
+.text-nav .rail__item:hover,.text-nav .rail__item:focus-visible{color:#e0e0e0;background:transparent}
+.text-nav .rail__item.is-active{color:#d5d5d5;background:transparent;border:0;box-shadow:none}
+.text-nav .rail__item::before,.text-nav .rail__item::after{display:none!important}
+.ust__hamburger{display:none!important}
+.ust{height:46px}
+@media(max-width:860px){
+ .ray.text-nav,html[data-rail="icon"] .ray.text-nav{padding:env(safe-area-inset-top) 14px 0;gap:16px;height:calc(44px + env(safe-area-inset-top));min-height:calc(44px + env(safe-area-inset-top))}
+ .text-nav .ray__menu{gap:20px}
+ .ust{height:44px;padding-top:0;gap:8px}
+ .ust__durum{font-size:9px;padding:5px 7px}
+ .ust__profil{flex:0 0 auto}
+}

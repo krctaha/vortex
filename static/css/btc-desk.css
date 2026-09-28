@@ -1,0 +1,13 @@
+.btc-desk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:18px;margin:18px 0}
+.btc-desk .dash-panel{margin:0;min-width:0;padding:20px}
+.btc-spot{display:flex;flex-direction:column;justify-content:space-between}
+.btc-spot h1{margin:8px 0 0;font-size:20px;font-weight:500;letter-spacing:-.5px}
+.btc-quote{display:flex;flex-wrap:wrap;align-items:baseline;gap:16px;font-variant-numeric:tabular-nums}
+.btc-quote strong{font-size:clamp(30px,3.4vw,48px);font-weight:500;letter-spacing:-1px;color:var(--ink)}
+.btc-quote>span{font-size:12px}.btc-chart-caption{display:flex;justify-content:space-between;color:var(--ink-3);font-size:10px;margin:14px 0 4px}.btc-chart-caption span:last-child{color:#858585}.btc-tape{height:116px;overflow:hidden;margin:0 0 12px;font-size:10px;color:var(--ink-3)}.btc-tape svg{width:100%;height:116px;display:block}.btc-tape:empty::after{content:'Bir dakikalık fiyat geçmişi yükleniyor…';font-size:10px;color:var(--ink-3)}
+.btc-meta,.book-footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--ink-3);font-size:10px}.btc-meta a{color:var(--ink-2)}
+.btc-book .dash-panel-head{margin-bottom:10px}.book-titles{display:grid;grid-template-columns:1fr 1fr;gap:18px;font-size:10px;color:var(--ink-3);margin:0 0 5px}.book-titles span:last-child{text-align:right}
+.book-rows{min-height:176px}.book-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;font-variant-numeric:tabular-nums;font-size:11px;height:22px;align-items:center}
+.book-level{position:relative;display:flex;justify-content:space-between;gap:8px;padding:3px 6px;overflow:hidden}.book-level::before{content:'';position:absolute;inset:0;pointer-events:none;opacity:.12;width:var(--depth);background:currentColor}.book-level.bid::before{left:auto;right:0}.book-level>span{position:relative}.book-level.bid{color:#79bca5}.book-level.ask{color:#dc8b93}.book-level .book-qty{color:var(--ink-2)}
+.book-footer{border-top:1px solid var(--border);padding-top:9px;margin-top:6px}.btc-book.is-stale .book-rows{opacity:.4}
+@media(max-width:850px){.btc-desk{grid-template-columns:minmax(0,1fr);gap:12px}.btc-desk .dash-panel{padding:16px}.btc-spot .dash-panel-head{margin-bottom:12px}.btc-quote strong{font-size:36px}.btc-tape{height:100px;margin:0 0 10px}.btc-tape svg{height:100px}.book-row,.book-titles{gap:12px}.btc-quote{gap:12px}}

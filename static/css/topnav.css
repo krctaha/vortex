@@ -1,0 +1,244 @@
+/* ÜST NAVİGASYON + RENK SİSTEMİ
+   =========================================================================
+   İki iş yapıyor: kabuğu dikeyden yataya çeviriyor ve palet tokenlarını
+   yeniden tanımlıyor. İkisi aynı dosyada çünkü ikisi de KABUK kararı;
+   sayfa CSS'leri bunların üstüne biniyor.
+
+   KABUK DEĞİŞİMİ
+   Sol rail 223 piksel kalıcı yer tutuyordu. Yatay şeritte aynı bilgi
+   58 piksel yükseklikte duruyor ve kazanılan genişlik doğrudan asıl işe
+   gidiyor: plan tablosu ve grafik.
+
+   Rail'in CSS'i (vortex.css) DURUYOR ve silinmedi — `.rail` artık hiçbir
+   şablonda yok, ölü kural olarak kalması zararsız; silmek dashboard'ın
+   eski mobil alt çubuk kurallarını da götürürdü ve o riski almaya değmez.
+   ========================================================================= */
+:root{
+  /* ================================================================
+     RENK MERDİVENİ — dört basamak, gölge yok.
+
+     Derinlik gölgeyle değil YÜZEY TONUYLA kuruluyor: her basamak bir
+     tık açık, bir tık öne yakın. Bu, koyu bir arayüzde gölgeden daha
+     temiz çalışıyor — gölge koyu zeminde ya görünmüyor ya da kirli
+     bir bulanıklık bırakıyor.
+     ================================================================ */
+  --page:#07080a;
+  --shell:#07080a;          /* tuval */
+  --surface:#0d0d0d;        /* kart */
+  --surface-1:#0d0d0d;
+  --surface-2:#101111;      /* yükseltilmiş: input, ikincil düğme */
+  --surface-3:#121212;      /* en üst: ikon karesi, tuş kapağı */
+  --panel:#0d0d0d;
+  --panel-background:#0d0d0d;
+
+  /* Kenarlıklar kıl payı. Sistemde gölge YOK; her kart kenarını
+     bu 1 piksel taşıyor. */
+  --border:#242728;
+  --border-strong:rgba(255,255,255,.16);
+  --edge:rgba(255,255,255,.08);
+
+  /* Metin merdiveni */
+  --ink:#f4f4f6;
+  --ink-1:#f4f4f6;
+  --ink-2:#cdcdcd;
+  --ink-3:#9c9c9d;
+  --ink-4:#6a6b6c;
+
+  /* BİRİNCİL EYLEM BEYAZ. Sistemde ikinci bir birincil renk yok:
+     beyaz, markanın eylem rengi. Bu yüzden ekranda az bulunmalı —
+     bir katlamada en fazla bir dolu beyaz hap. */
+  --accent:#ffffff;
+  --accent-2:#e8e8e8;
+  --accent-3:#9c9c9d;
+  --accent-dim:rgba(255,255,255,.08);
+  --on-accent:#000000;
+
+  /* VERİ renkleri. Sistem doygun renkleri "yalnızca illüstrasyon
+     içinde" diye sınırlıyor; buradaki yeşil/kırmızı bir süs değil,
+     yönün kendisi — fiyat verisi. O yüzden kalıyorlar, ama sistemin
+     tonlarına çekildi. */
+  --up:#59d499;
+  --up-dim:rgba(89,212,153,.15);
+  --down:#ff6161;
+  --down-dim:rgba(255,97,97,.15);
+  --uyari:#ffc533;
+  --uyari-dim:rgba(255,197,51,.15);
+  --bilgi:#57c1ff;
+  --bilgi-dim:rgba(87,193,255,.15);
+
+  /* Yarıçap 4–16 arasında sıkışık. Sistem kartlarda asla düz (0)
+     olmuyor, 16'nın üstüne de çıkmıyor. */
+  --r-shell:16px;
+  --r-xl:10px;
+  --r-lg:10px;
+  --r-md:8px;
+  --r-sm:6px;
+  --r-xs:4px;
+  --shadow:none;
+
+  --font:Inter,"Inter Fallback",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --display:var(--font);
+}
+
+/* ss03 SİTE GENELİNDE — sistemin en ayırt edici tipografik detayı.
+   Bu satır olmadan gövde yüzü "varsayılan Inter" gibi görünüyor. */
+html,body,button,input,select,textarea{
+  font-family:var(--font);
+  font-feature-settings:"calt","kern","liga","ss03";
+}
+
+/* Kabuk: dikey → yatay */
+.app{flex-direction:column}
+
+/* KAYDIRMA HATASI — min-height:0 (10.09)
+   ------------------------------------------------------------------
+   vortex.css'te `.main` şöyle: `flex:1; min-width:0; overflow-y:auto`.
+   Eski kabuk YATAY bir flex'ti (rail | main); kısıtlayan eksen genişlikti
+   ve `min-width:0` doğru kuraldı.
+
+   Kabuk DİKEY olunca kısıtlayan eksen YÜKSEKLİK oldu. Bir flex çocuğunun
+   `min-height` varsayılanı `auto`dur: içeriğinden kısa olmayı REDDEDER.
+   Yani `.main` içeriği kadar uzadı, `overflow-y:auto` hiç devreye girmedi
+   ve `body{overflow:hidden}` fazlalığı kesti.
+
+   Sonuç: sayfa ne kaydı ne de taştı — alt kısmı görünmez oldu. Tek
+   satırlık bir eksik, sayfanın yarısını yok etti.
+
+   Ders: flex yönünü değiştirirken min-width/min-height çiftini birlikte
+   düşün; ikisi aynı işin iki eksendeki hâli. */
+.main{padding:18px 22px 28px;min-height:0;
+  /* KAYDIRMA ÇUBUĞU GÖRÜNÜR OLMALI.
+     Genel kural (vortex.css) 8 piksel genişlik ve #262626 tırnak
+     veriyordu; koyu zeminde bu neredeyse görünmez. Kaydırma ÇALIŞIYOR
+     olması yetmiyor — kullanıcı sayfanın devamı olduğunu ancak çubuğu
+     görürse anlar. Görünmeyen bir çubuk, olmayan bir çubuktur.
+     scrollbar-gutter:stable: çubuk çıkıp kaybolurken içerik yatayda
+     zıplamıyor. */
+  scrollbar-width:auto;scrollbar-color:#5a5c5e transparent;
+  scrollbar-gutter:stable}
+.main::-webkit-scrollbar{width:12px}
+.main::-webkit-scrollbar-track{background:rgba(255,255,255,.03);
+  border-radius:8px}
+.main::-webkit-scrollbar-thumb{background:#4a4c4e;border-radius:8px;
+  border:3px solid transparent;background-clip:content-box}
+.main::-webkit-scrollbar-thumb:hover{background:#66686a;
+  border:3px solid transparent;background-clip:content-box}
+
+/* ---- ŞERİT ------------------------------------------------------------ */
+.tnav{display:flex;align-items:center;gap:16px;flex:0 0 auto;
+  height:58px;padding:0 16px;margin:8px 8px 0;
+  border:1px solid var(--border);border-radius:var(--r-xl);
+  background:var(--surface);position:relative;z-index:40}
+
+.tnav__marka{display:flex;align-items:center;gap:9px;flex:0 0 auto;
+  text-decoration:none;color:var(--ink)}
+.tnav__mark{display:flex;width:22px;height:22px}
+.tnav__mark svg{width:100%;height:100%}
+.tnav__ad{font-size:14px;font-weight:600;letter-spacing:-.01em}
+.tnav__rozet{font-size:8.5px;font-weight:700;letter-spacing:.09em;
+  padding:2px 6px;border-radius:4px;color:rgba(255,255,255,.72);
+  background:var(--surface-2);border:1px solid var(--border)}
+
+/* ---- MENÜ ------------------------------------------------------------- */
+.tnav__menu{display:flex;align-items:center;gap:2px;flex:1;min-width:0;
+  overflow-x:auto;scrollbar-width:none}
+.tnav__menu::-webkit-scrollbar{display:none}
+.tnav__link{display:inline-flex;align-items:center;gap:8px;flex:0 0 auto;
+  height:36px;padding:0 13px;border-radius:9px;text-decoration:none;
+  color:var(--ink-3);font-size:13px;font-weight:500;
+  transition:background .14s ease,color .14s ease}
+.tnav__link svg{width:16px;height:16px;flex:0 0 auto}
+.tnav__link:hover{background:rgba(255,255,255,.05);color:var(--ink-2)}
+/* Aktif: dolgulu yüzey + lila metin. Alt çizgi yerine yüzey, çünkü
+   şerit 58 piksel ve alt çizgi kenarlığa yapışıp okunmuyordu. */
+/* Aktif sekme rengi değil YÜZEYİ değiştiriyor: bir basamak yukarı
+   çıkıyor. Sistemin kuralı bu — doygun renk chrome'da kullanılmıyor. */
+.tnav__link.is-active{background:var(--surface-2);color:#fff;
+  box-shadow:inset 0 0 0 1px var(--border)}
+.tnav__link--ikincil{margin-left:auto}
+/* Rail'den kalan aktif göstergesi TEMİZLENİYOR.
+   vortex.css ve vortex-clean.css `.rail__item.is-active` için sağ
+   kenara dikey bir çubuk çiziyor; dikey menüde doğru, yatay şeritte
+   etiketin yanında başıboş bir çizgi olarak duruyordu. Sınıfı
+   korumamızın bedeli bu — ve bedeli ödemeye değer, çünkü sınıfı
+   değiştirmek SPA yönlendiricinin aktif durum mantığını bozardı. */
+.tnav__link.is-active::before,.tnav__link.is-active::after{content:none;display:none}
+
+/* ---- SAĞ TARAF -------------------------------------------------------- */
+.tnav__sag{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.tnav__ara{display:inline-flex;align-items:center;gap:8px;height:34px;
+  padding:0 11px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);
+  color:var(--ink-3);font:inherit;font-size:12px}
+.tnav__ara svg{width:14px;height:14px}
+.tnav__ara:hover{border-color:var(--border-strong);color:var(--ink-2)}
+.tnav__kbd{font-style:normal;font-size:9.5px;padding:1px 5px;border-radius:4px;
+  background:rgba(255,255,255,.07);color:var(--ink-3)}
+.tnav__ikon{display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:9px;color:var(--ink-3);
+  border:1px solid var(--border);background:rgba(255,255,255,.03)}
+.tnav__ikon svg{width:16px;height:16px}
+.tnav__ikon:hover{color:var(--ink-2);border-color:var(--border-strong)}
+.tnav__durum,.tnav__saat{height:34px;display:inline-flex;align-items:center}
+.tnav__avatar{width:34px;height:34px}
+.tnav__hamburger{display:none;align-items:center;justify-content:center;
+  width:36px;height:36px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--border);background:rgba(255,255,255,.03);
+  color:var(--ink-2)}
+.tnav__hamburger svg{width:18px;height:18px}
+.tnav__hb-kapat{display:none}
+body.mobile-nav-open .tnav__hb-menu{display:none}
+body.mobile-nav-open .tnav__hb-kapat{display:block}
+
+/* Sayfa başlığı artık şeritle çakışmasın diye üstteki eyebrow küçüldü. */
+.workspace__header{padding-bottom:16px;margin-bottom:16px}
+
+/* ---- ARA GENİŞLİK ----------------------------------------------------- */
+@media(max-width:1240px){
+  .tnav__ara span{display:none}
+  .tnav__ara{padding:0 9px}
+  .tnav__kbd{display:none}
+  .tnav__saat{display:none}
+}
+@media(max-width:1080px){
+  .tnav__link span{display:none}
+  .tnav__link{padding:0 11px}
+  .tnav__link svg{width:18px;height:18px}
+}
+
+/* ---- MOBİL: ÇEKMECE ---------------------------------------------------
+   Alt çubuk yerine çekmece. Alt çubuk beş maddeyi ikona indiriyordu ve
+   hangisinin ne olduğu yalnız ikondan anlaşılmıyordu; çekmecede etiket
+   geri geliyor. */
+@media(max-width:860px){
+  body{padding:0}
+  .app{border:none;border-radius:0}
+  .tnav{margin:0;border-radius:0;border-left:none;border-right:none;
+    border-top:none;height:54px;padding:0 12px;gap:10px}
+  .tnav__hamburger{display:inline-flex}
+  .tnav__ara span,.tnav__kbd,.tnav__saat,.tnav__ikon{display:none}
+  .tnav__rozet{display:none}
+  .main{padding:14px 13px 24px}
+
+  .tnav__menu{position:fixed;top:54px;left:0;right:0;
+    display:grid;gap:4px;align-items:stretch;
+    padding:12px;background:var(--surface);
+    border-bottom:1px solid var(--border);
+    box-shadow:0 22px 48px rgba(0,0,0,.55);
+    transform:translateY(-12px);opacity:0;pointer-events:none;
+    transition:transform .16s ease,opacity .16s ease;z-index:39;
+    overflow-x:visible}
+  body.mobile-nav-open .tnav__menu{transform:translateY(0);opacity:1;
+    pointer-events:auto}
+  .tnav__link{height:44px;width:100%;padding:0 14px;font-size:14px}
+  .tnav__link span{display:inline}
+  .tnav__link--ikincil{margin-left:0}
+
+  .mobile-nav-backdrop{position:fixed;inset:54px 0 0;z-index:38;
+    background:rgba(0,0,0,.5);border:0;opacity:0;pointer-events:none;
+    transition:opacity .16s ease}
+  body.mobile-nav-open .mobile-nav-backdrop{opacity:1;pointer-events:auto}
+}
+@media(min-width:861px){
+  .mobile-nav-backdrop{display:none}
+}

@@ -1,0 +1,846 @@
+.workspace__live-row{display:flex;align-items:baseline;gap:10px;margin-top:6px}
+.workspace__live-row b{font-size:20px;font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:var(--ink)}
+.workspace__live-row span{font-size:10px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.workspace__flow-chart{height:210px}
+.workspace__flow-live{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.workspace__flow-live span{padding:5px 8px;border:1px solid var(--border);border-radius:7px;font-size:11px;font-variant-numeric:tabular-nums}
+.workspace__flow[hidden]{display:none}
+@media(max-width:640px){.workspace__live-row{align-items:flex-start;flex-direction:column;gap:3px}.workspace__flow-chart{height:180px}.workspace__flow-live{justify-content:flex-start}}
+.workspace__runtime-settings{display:grid;gap:14px;margin-top:14px}
+.workspace__form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+.workspace__check-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.workspace__span-2{grid-column:span 2}
+.workspace__switch{display:flex;align-items:center;gap:10px;min-height:43px;padding:9px 11px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.018);font-size:12px;color:var(--ink-2);cursor:pointer}
+.workspace__switch input{width:16px;height:16px;accent-color:var(--accent);flex:0 0 auto}
+.workspace__savebar{position:sticky;bottom:12px;z-index:15;display:flex;justify-content:space-between;align-items:center;gap:16px;padding:12px 14px;border:1px solid var(--border-strong);border-radius:10px;background:var(--panel-background);box-shadow:0 12px 40px rgba(0,0,0,.45);backdrop-filter:blur(12px);font-size:12px;color:var(--ink-3)}
+.workspace__warning--inside{margin-top:14px;margin-bottom:0}
+@media(max-width:900px){.workspace__form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.workspace__check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:580px){.workspace__form-grid,.workspace__check-grid{grid-template-columns:1fr}.workspace__span-2{grid-column:auto}.workspace__savebar{align-items:stretch;flex-direction:column}}
+.workspace__x-text{width:100%;min-height:142px;resize:vertical;font-size:13px;line-height:1.65;white-space:pre-wrap;background:var(--surface-2)}
+
+/* ---- MENTOR GUNLUGU ---- */
+.gunluk-gate{border-color:rgba(248,113,113,.32);background:rgba(248,113,113,.07)}
+.gunluk-gate--ok{border-color:var(--border);background:transparent}
+.gunluk-trade{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;padding:11px 0;border-bottom:1px solid var(--border)}
+.gunluk-trade:last-child{border-bottom:0}
+.gunluk-trade__why{flex:1 1 240px;min-width:0;font-size:12px;color:var(--ink-2);line-height:1.5}
+.gunluk-trade__ctx{display:flex;flex-wrap:wrap;gap:6px;margin-top:5px}
+.gunluk-trade__ctx span{padding:2px 7px;border:1px solid var(--border);border-radius:6px;font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.gunluk-flag{padding:3px 8px;border-radius:6px;font-size:10.5px;border:1px solid rgba(248,113,113,.35);color:#fca5a5;background:rgba(248,113,113,.08)}
+.gunluk-advice{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;margin-bottom:8px;border:1px solid var(--border);border-radius:9px;font-size:12.5px;line-height:1.6}
+.gunluk-advice__dot{flex:0 0 auto;width:7px;height:7px;border-radius:50%;margin-top:7px;background:var(--ink-3)}
+.gunluk-advice--uyari{border-color:rgba(248,113,113,.3);background:rgba(248,113,113,.05)}
+.gunluk-advice--uyari .gunluk-advice__dot{background:var(--down)}
+.gunluk-advice--iyi{border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.05)}
+.gunluk-advice--iyi .gunluk-advice__dot{background:var(--up)}
+.gunluk-advice--onemli{border-color:var(--border-strong)}
+.gunluk-advice--onemli .gunluk-advice__dot{background:var(--ink)}
+.gunluk-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:12px}
+.gunluk-stat{padding:10px 12px;border:1px solid var(--border);border-radius:9px}
+.gunluk-stat small{display:block;font-size:10.5px;color:var(--ink-3);margin-bottom:4px}
+.gunluk-stat b{font-size:17px;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.gunluk-split{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:14px}
+.gunluk-weak{opacity:.45}
+@media(max-width:580px){.gunluk-trade{gap:8px 12px}}
+
+/* "Simdi ne yapmali" karti — karardan hemen sonra, en gorunur yer.
+   Sadece ret veren bir mentor ise yaramaz; somut adim burada. */
+.mentor-card--action{border-color:var(--border-strong);background:rgba(255,255,255,.028);margin-bottom:14px}
+.mentor-card--action h3{color:var(--ink)}
+.mentor-card--action li{font-size:13px;line-height:1.65}
+
+/* ---- BUGÜN NE VAR: PLAN TABLOSU ----
+   Kullanıcı radar tablosunu beğendi ve haklıydı: başlıklı, hizalı,
+   yoğun bir tablo bir kart listesinden çok daha hızlı okunuyor — göz
+   aşağı kayarken her satırda aynı yere bakıyor.
+
+   On iki sütun dar bir kolona sığmazdı; bu yüzden panel tam genişliğe
+   taşındı. Özet satırda YALNIZCA karşılaştırılabilir sayılar var;
+   gerekçe, hedef tablosu ve zaman dilimi açıklamaları satırı açınca
+   geliyor. Kalabalık şikâyetinin çaresi bilgiyi silmek değil,
+   katmanlamaktı. */
+.plan-tablo{border:1px solid var(--border);border-radius:10px;overflow:hidden}
+.ptr-head,.ptr>summary{display:grid;align-items:center;gap:10px;
+  grid-template-columns:minmax(74px,1fr) 62px 54px 48px minmax(72px,1fr)
+                        minmax(72px,1fr) minmax(72px,1fr) 92px 84px 78px 62px 22px}
+.ptr-head{padding:8px 12px;font-size:9.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.02)}
+.ptr-head span:nth-child(n+3),.ptr>summary>span:nth-child(n+3){text-align:right}
+.ptr-head span:nth-child(8),.ptr-head span:nth-child(9),.ptr-head span:nth-child(10){text-align:center}
+.ptr{border-bottom:1px solid var(--border)}
+.ptr:last-child{border-bottom:0}
+.ptr>summary{list-style:none;cursor:pointer;padding:7px 12px;
+  font-variant-numeric:tabular-nums}
+.ptr>summary::-webkit-details-marker{display:none}
+.ptr>summary:hover{background:rgba(255,255,255,.03)}
+.ptr[open]>summary{background:rgba(255,255,255,.045)}
+.ptr__sym{display:flex;align-items:center;gap:7px;min-width:0}
+.ptr__sym b{font-size:12.5px;letter-spacing:-.01em;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.ptr__mini{display:block;height:22px}
+.ptr__mini .mini{width:62px;height:22px}
+.ptr__yon{font-size:10px;font-weight:700;letter-spacing:.04em;text-align:right}
+.ptr__yon.up{color:var(--up)}
+.ptr__yon.down{color:var(--down)}
+.ptr__rr{font-size:11.5px;font-weight:700;color:var(--ink)}
+/* Sayı üstte, birimi/oranı altında küçük: sütun genişlemeden iki bilgi. */
+.ptr__n{font-size:11.5px;color:var(--ink);line-height:1.25;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ptr__n em{display:block;font-style:normal;font-size:9px;color:var(--ink-3)}
+.ptr__n.up{color:var(--up)}
+.ptr__n.down{color:var(--down)}
+.ptr__c{display:flex;justify-content:center;min-width:0}
+.ptr__u{text-align:right;color:#f6c76b;font-size:11px;cursor:help}
+.ptr__u em{font-style:normal}
+/* Tablo satırında rozetler daha küçük: on iki sütunun yanında normal
+   boyutları satırı şişiriyordu. */
+.ptr .zd{padding:1px 5px;gap:1px}
+.ptr .zd i{font-size:9px;padding:0 2px}
+.ptr .zd i em{display:none}
+.ptr .gz{font-size:8.5px;padding:1px 6px;letter-spacing:.03em;
+  white-space:nowrap;max-width:100%;overflow:hidden}
+.gz__kisa{display:none;font-style:normal}
+.th-uzun,.th-kisa{font-weight:inherit;font-style:normal}
+.th-kisa{display:none}
+.pt--s .th-uzun,.pt--xs .th-uzun{display:none}
+.pt--s .th-kisa,.pt--xs .th-kisa{display:inline}
+.pt--s .ptr .gz,.pt--xs .ptr .gz{font-size:8px;padding:1px 4px;letter-spacing:0}
+.pt--s .ptr .gz__uzun,.pt--xs .ptr .gz__uzun{display:none}
+.pt--s .ptr .gz__kisa,.pt--xs .ptr .gz__kisa{display:inline}
+.ptr .btc-roz{font-size:9px;padding:1px 6px}
+
+/* SÜTUN DÜŞÜRME KONTEYNERE GÖRE, EKRANA GÖRE DEĞİL.
+   Aynı tablo terminal düzeninde ~480 piksellik orta sütunda da, geniş
+   yerleşimde 1150 pikselde de duruyor. Ekran genişliğine bakan medya
+   sorguları burada yanlış ölçü: ekran 1440 ama sütun 480. Sınıfları JS
+   koyuyor (konteyner sorguları henüz her yerde yok) ve eşikler her
+   düzenin GERÇEK asgari genişliğine göre seçildi — tahminle değil.
+
+   Çocuk sırası: 1 coin, 2 grafik, 3 yön, 4 r/r, 5 giriş, 6 stop,
+   7 tp1, 8 zaman dilimi, 9 zamanlama, 10 btc, 11 risk, 12 uyarı.
+   Düşenlerin hepsi satırı açınca detayda duruyor.
+
+   Hangi sütunun ÖNCE düştüğü bir karar: TP1, BTC ve risk önce düşüyor
+   çünkü üçü de detayda tekrarlanıyor. ZAMANLAMA HİÇ DÜŞMÜYOR — dar
+   sütunda etiketi kısalıyor ("GEÇ KALINDI"→"GEÇ") ama rozet kalıyor;
+   satırdaki tek eylem çağrısı o. Zaman dilimi en son düşüyor çünkü
+   kurulumun tek dilimde mi yaşadığı, kararın kendisi. */
+/* Sınıf #planListe üzerinde; .plan-tablo onun çocuğu. */
+.pt--m .ptr-head,.pt--m .ptr>summary{
+  grid-template-columns:minmax(62px,1fr) 50px 48px 42px minmax(62px,1fr)
+                        minmax(62px,1fr) 78px 68px 18px;gap:7px}
+.pt--m .ptr-head span:nth-child(7),.pt--m .ptr>summary>span:nth-child(7),
+.pt--m .ptr-head span:nth-child(10),.pt--m .ptr>summary>span:nth-child(10),
+.pt--m .ptr-head span:nth-child(11),.pt--m .ptr>summary>span:nth-child(11){display:none}
+.pt--m .ptr__mini .mini{width:46px}
+
+/* Dar sütun: mini grafik düşüyor; zaman dilimi ve zamanlama kalıyor. */
+.pt--s .ptr-head,.pt--s .ptr>summary{
+  grid-template-columns:minmax(46px,1fr) 42px 38px minmax(54px,1fr)
+                        minmax(54px,1fr) 64px 44px 18px;gap:5px;
+  padding-left:8px;padding-right:8px}
+.pt--s .ptr-head span:nth-child(2),.pt--s .ptr>summary>span:nth-child(2),
+.pt--s .ptr-head span:nth-child(7),.pt--s .ptr>summary>span:nth-child(7),
+.pt--s .ptr-head span:nth-child(10),.pt--s .ptr>summary>span:nth-child(10),
+.pt--s .ptr-head span:nth-child(11),.pt--s .ptr>summary>span:nth-child(11){display:none}
+.pt--s .ptr__sym b{font-size:11.5px}
+.pt--s .ptr__n{font-size:11px}
+.pt--s .ptr .zd{padding:1px 4px}
+.pt--s .ptr .zd i{font-size:8.5px;padding:0 1px}
+
+/* En dar: karşılaştırma için gereken sayılar + zamanlama.
+   Zamanlama en dar sütunda bile kalıyor: "şimdi mi, bekle mi" sorusunun
+   cevabı satırın var oluş sebebi. */
+.pt--xs .ptr-head,.pt--xs .ptr>summary{
+  grid-template-columns:minmax(44px,1fr) 40px 36px minmax(52px,1fr) 42px 18px;
+  gap:5px;padding:7px 7px}
+.pt--xs .ptr-head span:nth-child(2),.pt--xs .ptr>summary>span:nth-child(2),
+.pt--xs .ptr-head span:nth-child(6),.pt--xs .ptr>summary>span:nth-child(6),
+.pt--xs .ptr-head span:nth-child(7),.pt--xs .ptr>summary>span:nth-child(7),
+.pt--xs .ptr-head span:nth-child(8),.pt--xs .ptr>summary>span:nth-child(8),
+.pt--xs .ptr-head span:nth-child(10),.pt--xs .ptr>summary>span:nth-child(10),
+.pt--xs .ptr-head span:nth-child(11),.pt--xs .ptr>summary>span:nth-child(11){display:none}
+.pt--xs .ptr__sym b{font-size:11.5px}
+
+
+.plan-det{padding:2px 15px 15px;border-top:1px solid var(--border);
+  background:rgba(0,0,0,.16)}
+.plan-det__ozet{margin:12px 0 0;font-size:12.5px;line-height:1.65;color:var(--ink-2)}
+.plan-det__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;margin-top:12px}
+.plan-det__blok>span{display:block;font-size:10.5px;letter-spacing:.04em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:5px}
+.plan-det__blok ul{margin:0;padding-left:16px}
+.plan-det__blok li{font-size:12px;line-height:1.55;color:var(--ink-2)}
+.plan-det__satir{margin-top:9px;font-size:12px;line-height:1.6;color:var(--ink-2)}
+.plan-det__satir>span{color:var(--ink-3)}
+.plan-det__uyari{margin-top:10px;padding:8px 10px;border-radius:8px;
+  border:1px solid rgba(246,199,107,.22);background:rgba(246,199,107,.05);
+  font-size:11.5px;line-height:1.55;color:#f6c76b}
+.plan-det__alt{display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+  margin-top:13px;padding-top:12px;border-top:1px solid var(--border)}
+.plan-det__alt .workspace__muted{flex:1 1 240px;font-size:11px}
+
+
+
+/* ===================================================================
+   MENTOR SAYFASI — GORSEL DUZEN
+   Sorun neydi: her panel ayni agirlikta gri kutuydu, hiyerarsi yoktu.
+   En onemli panel (Bugun Ne Var) en bostu, ekranin en buyuk alanini
+   ise hicbir sey yapmayan bir placeholder kapliyordu.
+   =================================================================== */
+
+/* KPI ŞERİDİ — eski "mstrip" ince bandının yerine.
+   O bant altı sayıyı 11 piksellik yazıyla tek satıra sıkıştırıyordu ve
+   hiçbiri okunmuyordu; şerit görsel olarak sayfanın en önemsiz parçası
+   gibi duruyordu, oysa karar için ilk bakılacak yer orası. Artık her
+   sayı kendi kutusunda: etiket, büyük rakam, altında ne olduğu. */
+.mkpi{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:9px;margin-bottom:13px}
+.mkpi__t{position:relative;overflow:hidden;padding:12px 13px;border:1px solid var(--border);
+  border-radius:12px;background:linear-gradient(165deg,rgba(255,255,255,.035),rgba(255,255,255,.008))}
+.mkpi__t>span{display:block;font-size:10px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkpi__t>b{display:block;margin-top:6px;font-size:19px;font-weight:600;letter-spacing:-.025em;
+  font-variant-numeric:tabular-nums;line-height:1.15;color:var(--ink);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkpi__t>i{display:block;margin-top:4px;font-style:normal;font-size:10px;color:var(--ink-3);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* İlk kutu evrenin büyüklüğünü söylüyor — sistemin en somut iddiası o. */
+.mkpi__t:first-child{border-color:rgba(125,211,252,.28);
+  background:linear-gradient(165deg,rgba(125,211,252,.09),rgba(255,255,255,.008))}
+.mkpi__t:first-child>b{color:#bae6fd}
+@media(max-width:1320px){.mkpi{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:1000px){.mkpi{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:620px){.mkpi{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .mkpi__t{padding:10px 11px}.mkpi__t>b{font-size:16px}.mkpi__t>i{display:none}}
+
+/* PİYASA KUTULARI — şeridin ilk üçü.
+   BTC ve ETH fiyatı kütüphaneden geliyor, ek Binance çağrısı yok.
+   Üçüncü kutu futures konumlanması: LONG/SHORT oranı. */
+.mkpi__t>b.up,.mkpi__t>i.up{color:var(--up)}
+.mkpi__t>b.down,.mkpi__t>i.down{color:var(--down)}
+.mkpi__t--px>b{font-size:17px}
+.mkpi__t--ls>b{font-size:17px}
+/* İnce iki renkli bar: soldaki dolu kısım long, kalanı short.
+   Sayıyı okumadan da hangi tarafın kalabalık olduğu görünüyor. */
+.lsbar{position:relative;height:4px;margin:7px 0 5px;border-radius:3px;
+  background:rgba(248,113,113,.32);overflow:hidden}
+.lsbar i{display:block;height:100%;border-radius:3px;background:var(--up);
+  transition:width .4s ease}
+.lsnot{display:block;font-style:normal;font-size:9.5px;color:var(--ink-3);
+  line-height:1.35;white-space:normal;overflow:hidden;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+
+/* Canlı rozeti — "ben basıp taratmayayım" isteğinin görünür karşılığı:
+   listenin kendi kendine yenilendiğini ve en son ne zaman yenilendiğini
+   söylüyor. Nabız noktası yanıp sönmüyor; sürekli hareket eden bir öğe
+   ekranın en üstünde dikkat çalar. */
+.canli{display:inline-flex;align-items:center;gap:6px;padding:3px 9px;
+  border:1px solid var(--border);border-radius:20px;font-size:10.5px;color:var(--ink-3)}
+.canli i{width:6px;height:6px;border-radius:50%;background:var(--up);
+  box-shadow:0 0 0 3px rgba(74,222,128,.14)}
+.canli b{color:var(--ink-2);font-variant-numeric:tabular-nums;font-weight:600}
+
+/* Plan listesi üst satırı: solda ne tarandığı, sağda YÖN DAĞILIMI.
+   Dağılımı yazmak "sürekli short buluyor" sorusunu ikiye ayırıyor —
+   sıralama hatası mı, yoksa piyasa gerçekten tek taraflı mı. */
+.plan-ust{display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;margin-bottom:10px}
+/* Yön rozetleri artık DÜĞME.
+   Başlıkta "4 long · 9 short" yazıp listede sekiz satır göstermek,
+   sayıyla listeyi çelişkiye düşürüyordu — ve çelişen bir sayı güven
+   vermez, şüphe uyandırır. Artık liste bulunanın tamamını gösteriyor;
+   rozete basınca yalnızca o yön süzülüyor. */
+.plan-dag{display:inline-flex;gap:6px}
+.plan-dag__b{font-size:10.5px;font-weight:600;padding:3px 10px;cursor:pointer;
+  border-radius:20px;font-variant-numeric:tabular-nums;font-family:inherit;
+  background:transparent;transition:background .14s,border-color .14s}
+.plan-dag__b.up{color:var(--up);background:var(--up-dim);border:1px solid rgba(74,222,128,.22)}
+.plan-dag__b.down{color:var(--down);background:var(--down-dim);border:1px solid rgba(248,113,113,.22)}
+.plan-dag__b:hover{filter:brightness(1.25)}
+/* Açık süzgeç kalın çerçeveyle işaretli: hangi listeye baktığın
+   belirsiz kalmasın. */
+.plan-dag__b.is-acik{box-shadow:inset 0 0 0 1px currentColor}
+.plan-dag__b.up.is-acik{background:rgba(74,222,128,.2)}
+.plan-dag__b.down.is-acik{background:rgba(248,113,113,.2)}
+
+/* ANA IZGARA — ölü alanın asıl çaresi.
+   Tek sütunlu yerleşimde içinde tek satır yazan bir panel bile tam
+   genişlik kaplıyor ve sağı boş kalıyordu. Dar içerikli paneller (açık
+   işlemler, karne) artık dar sütunda; geniş olan iş (Bugün Ne Var)
+   solda. Aynı içerik, yarı yükseklik, boşluk yok. */
+.mgrid{display:grid;grid-template-columns:minmax(0,1.62fr) minmax(300px,1fr);
+  gap:13px;align-items:start}
+/* Açık işlemler ve karne: ikisi de dar içerikli, eşit bölünüyorlar. */
+.mgrid--esit{grid-template-columns:minmax(0,1.15fr) minmax(280px,1fr)}
+.mgrid__ana,.mgrid__yan{display:grid;gap:13px;align-content:start;min-width:0}
+@media(max-width:1080px){.mgrid{grid-template-columns:1fr}}
+
+/* HERO panel: sayfanın ana eylemi. İnce bir vurgu çizgisi ve biraz daha
+   nefes; diğerlerinden ayrıldığı ANLAŞILSIN diye. */
+.panel--hero{position:relative;overflow:hidden;border-color:var(--border-strong);
+  background:linear-gradient(160deg,rgba(255,255,255,.035),var(--panel-background) 42%)}
+.panel--hero::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(180deg,var(--ink),transparent 70%);opacity:.5}
+.panel--hero .panel__title{font-size:15px;letter-spacing:-.01em}
+
+/* Boş durum panelleri gereksiz uzundu; içerik yokken yer kaplamasın.
+   Ölü alanın küçük ama görünür bir parçası buydu. */
+.workspace .panel .empty{padding:16px 0;font-size:12px}
+.panel--hero .empty{padding:20px 0}
+.mgrid__yan .empty{padding:12px 0;font-size:11.5px}
+
+/* ===================================================================
+   RADAR — kompakt evren tablosu
+
+   İki tasarım kararı ve ikisinin de sebebi ÖLÜ ALAN:
+
+   1) Satır yüksekliği 26px, tabular sayılar, ayırıcı çizgi yok.
+      Önceki panellerde her satır bir "kart" idi ve altı satır ekranı
+      dolduruyordu; tarama panelinin işi tam tersi — hepsini bir bakışta
+      göstermek.
+
+   2) Tablo geniş ekranda İKİYE bölünüyor. Tek sütunda tablo 1130 piksel
+      kaplamasına rağmen içinde yedi dar hücre vardı; aradaki her şey boş
+      griydi ve 40 satır ekranın iki katını kaplıyordu. İki sütun,
+      genişliği gerçekten kullanıyor ve yüksekliği yarıya indiriyor.
+   =================================================================== */
+.radar-ikili{display:grid;grid-template-columns:1fr;gap:0 26px}
+@media(min-width:1120px){.radar-ikili{grid-template-columns:1fr 1fr}}
+.radar-blok{min-width:0}
+.radar-head,.radar-row{display:grid;
+  grid-template-columns:minmax(58px,1fr) minmax(72px,.95fr) 60px 56px 50px 60px 58px;
+  gap:9px;align-items:center;font-variant-numeric:tabular-nums}
+.radar-head{padding:0 9px 7px;font-size:9.5px;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);border-bottom:1px solid var(--border)}
+.radar-head span:not(:first-child),.radar-row>span:not(:first-child){text-align:right}
+.radar-liste{max-height:none}
+.radar-row{padding:5px 9px;font-size:11.5px;border-radius:6px}
+.radar-row:hover{background:rgba(255,255,255,.03)}
+.radar-row__sym{font-weight:600;font-size:12px;color:var(--ink);text-decoration:none;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.radar-row__sym:hover{color:var(--accent)}
+.radar-row__px{color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.radar-row__c--up{color:var(--up)}
+.radar-row__c--down{color:var(--down)}
+.radar-row__vr{color:var(--ink-3)}
+/* Kendi medyanının 2 katını aşan hacim: hareketin en erken izi. */
+.radar-row__vr.is-hot{color:var(--warn);font-weight:600}
+.radar-row__v{color:var(--ink-3);font-size:11px}
+/* 24s aralıkta fiyatın konumu — sayıdan çok bir çizgi olarak okunuyor. */
+.radar-row__bant{position:relative;height:4px;border-radius:3px;
+  background:linear-gradient(90deg,rgba(248,113,113,.22),rgba(255,255,255,.07),rgba(74,222,128,.22))}
+.radar-row__bant i{position:absolute;top:-3px;width:2px;height:10px;border-radius:2px;
+  background:var(--ink);transform:translateX(-1px)}
+@media(max-width:700px){
+  .radar-head,.radar-row{grid-template-columns:minmax(54px,1fr) 70px 56px 50px;gap:8px}
+  .radar-head span:nth-child(n+5),.radar-row>span:nth-child(n+5){display:none}
+}
+
+/* Segment secici — radar siralama sekmeleri */
+.seg{display:inline-flex;border:1px solid var(--border);border-radius:8px;overflow:hidden}
+.seg button{border:0;background:transparent;color:var(--ink-3);cursor:pointer;
+  padding:0 9px;height:28px;font-size:10.5px;letter-spacing:.04em;font-weight:600}
+.seg button+button{border-left:1px solid var(--border)}
+.seg button:hover{color:var(--ink-2);background:rgba(255,255,255,.03)}
+.seg button.is-active{background:rgba(255,255,255,.07);color:var(--ink)}
+
+/* Kucuk giris alani — kompakt satirlarda tam boy input satiri sisiriyordu */
+.input--xs{height:28px;padding:0 8px;font-size:11.5px}
+select.input--xs{width:76px}
+
+/* Eksik varyantlar: gunluk satirlarinda kullaniliyordu ama tanimli degildi */
+.tag--up{color:var(--up);background:var(--up-dim);border-color:rgba(74,222,128,.22)}
+.tag--down{color:var(--down);background:var(--down-dim);border-color:rgba(248,113,113,.22)}
+
+/* Mentor sayfasi genel sikistirma: panel araliklari ve baslik boyutlari.
+   Kullanicinin sikayeti "asiri karisik" idi; bilgi silmek yerine
+   YOGUNLUK artirildi — ayni sayilar daha az dikey yerde. */
+.workspace .workspace__section{margin-top:14px}
+.workspace .panel__head{gap:12px}
+
+
+/* ===================================================================
+   ARAÇLAR — TEK SATIR ÇİP ŞERİDİ
+
+   Kart ızgarası bilgi olarak doğruydu ama sayfanın en üstünde iki sıra
+   yer kaplıyordu ve asıl iş (Bugün Ne Var) ekranın altına itiliyordu.
+   Kullanıcının "gereksiz kalabalık" dediği şey buydu.
+
+   Aynı sekiz araç artık tek satır. İkon, ad ve sayı duruyor — yani
+   "içinde iş var mı" sorusunun cevabı kaybolmadı, yalnızca daha az yer
+   kaplıyor. Açıklama metinleri başlık ipucuna taşındı: her gün okunacak
+   metinler değiller, bir kez okunup öğrenilirler.
+   =================================================================== */
+.aracbar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:13px}
+.aracbar__c{display:inline-flex;align-items:center;gap:7px;cursor:pointer;
+  padding:6px 11px;border:1px solid var(--border);border-radius:20px;
+  background:rgba(255,255,255,.022);color:var(--ink-2);font:inherit;
+  transition:border-color .14s,background .14s,color .14s}
+.aracbar__c svg{width:14px;height:14px;color:var(--ak,var(--ink-3));flex:0 0 auto}
+.aracbar__c b{font-size:11.5px;font-weight:500;white-space:nowrap}
+.aracbar__c:hover{border-color:var(--border-strong);background:rgba(255,255,255,.05);color:var(--ink)}
+.aracbar__c.is-acik{border-color:var(--ak-bd,var(--border-strong));
+  background:var(--ak-bg,rgba(255,255,255,.07));color:var(--ink)}
+.aracbar__r{font-style:normal;font-size:10px;font-weight:700;padding:1px 7px;
+  border-radius:20px;background:var(--ak-bg,rgba(255,255,255,.08));
+  color:var(--ak,var(--ink-2));font-variant-numeric:tabular-nums;white-space:nowrap}
+.aracbar__r.is-bos{background:transparent;border:1px solid var(--border);
+  color:var(--ink-3);font-weight:600}
+
+.aracbar__c[data-renk="a"]{--ak:#7dd3fc;--ak-bg:rgba(125,211,252,.13);--ak-bd:rgba(125,211,252,.34)}
+.aracbar__c[data-renk="b"]{--ak:#f6c76b;--ak-bg:rgba(246,199,107,.13);--ak-bd:rgba(246,199,107,.34)}
+.aracbar__c[data-renk="c"]{--ak:#a78bfa;--ak-bg:rgba(167,139,250,.13);--ak-bd:rgba(167,139,250,.34)}
+.aracbar__c[data-renk="d"]{--ak:#4ade80;--ak-bg:rgba(74,222,128,.13);--ak-bd:rgba(74,222,128,.34)}
+.aracbar__c[data-renk="e"]{--ak:#38bdf8;--ak-bg:rgba(56,189,248,.13);--ak-bd:rgba(56,189,248,.34)}
+.aracbar__c[data-renk="f"]{--ak:#f472b6;--ak-bg:rgba(244,114,182,.13);--ak-bd:rgba(244,114,182,.34)}
+.aracbar__c[data-renk="g"]{--ak:#94a3b8;--ak-bg:rgba(148,163,184,.13);--ak-bd:rgba(148,163,184,.34)}
+.aracbar__c[data-renk="h"]{--ak:#fb923c;--ak-bg:rgba(251,146,60,.13);--ak-bd:rgba(251,146,60,.34)}
+
+.arac-govde{margin-bottom:13px}
+.arac-pane{padding:15px;border:1px solid var(--border-strong);border-radius:11px;
+  background:rgba(255,255,255,.022)}
+.arac-pane[hidden]{display:none}
+.arac-pane__ust{display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap;margin-bottom:12px}
+.arac-pane .mentor-result:empty{display:none}
+.arac-pane .mentor-result{margin-top:14px}
+@media(max-width:620px){
+  .aracbar{gap:6px}
+  .aracbar__c{padding:6px 9px}
+  .aracbar__c b{font-size:11px}
+  .arac-pane{padding:12px}
+}
+
+/* BAĞLANTI TEŞHİSİ — "çekemiyorum" cümlesini bir sebebe çevirir.
+   Her adım ayrı satır; ilk kırılan yer kırmızı, sonrası hiç denenmiyor.
+   Çözüm metni hatanın hemen altında: hata mesajı okumak değil, iş
+   yapmak için orada. */
+.tsh{display:grid;gap:8px}
+.tsh__s{display:grid;grid-template-columns:20px 1fr;gap:10px;
+  padding:10px 12px;border:1px solid var(--border);border-radius:9px}
+.tsh__i{font-size:13px;line-height:1.2;text-align:center}
+.tsh__s--ok{border-color:rgba(74,222,128,.26);background:rgba(74,222,128,.05)}
+.tsh__s--ok .tsh__i{color:var(--up)}
+.tsh__s--hata{border-color:rgba(248,113,113,.34);background:rgba(248,113,113,.06)}
+.tsh__s--hata .tsh__i{color:var(--down)}
+.tsh__s--uyari{border-color:rgba(246,199,107,.3);background:rgba(246,199,107,.05)}
+.tsh__s--uyari .tsh__i{color:var(--warn)}
+.tsh__ad{font-size:12.5px;font-weight:600;color:var(--ink)}
+.tsh__d{font-size:11.5px;line-height:1.55;color:var(--ink-2);margin-top:3px;
+  word-break:break-word}
+.tsh__c{margin-top:7px;padding:8px 10px;border-radius:7px;
+  background:rgba(255,255,255,.04);font-size:11.5px;line-height:1.6;color:var(--ink-2)}
+.tsh__c code{font-family:var(--font-mono,monospace);font-size:11px;
+  background:rgba(0,0,0,.35);padding:1px 5px;border-radius:4px}
+
+/* AÇIK POZİSYON DENETİMİ — "tezim hâlâ ayakta mı".
+   Plan kurmak ile açık pozisyonu denetlemek farklı iki iştir; ikincisi
+   daha sık ihmal edilir ve daha pahalıya mal olur. */
+.dnt{margin-bottom:7px;padding:8px 10px;border-radius:8px;font-size:11.5px;
+  line-height:1.5;border:1px solid var(--border)}
+.dnt b{display:block;margin-bottom:3px;font-size:11.5px}
+.dnt ul{margin:4px 0 0;padding-left:16px}
+.dnt li{margin-top:2px}
+.dnt--uygun{border-color:rgba(74,222,128,.26);background:rgba(74,222,128,.05);color:var(--up)}
+.dnt--zayifladi{border-color:rgba(246,199,107,.3);background:rgba(246,199,107,.06);color:#f6c76b}
+.dnt--tez_bozuldu{border-color:rgba(248,113,113,.36);background:rgba(248,113,113,.07);color:#fca5a5}
+.dnt__r{float:right;font-variant-numeric:tabular-nums;font-weight:700}
+
+/* ===================================================================
+   SAYFA GEÇİŞİ (tek sayfa gezinme)
+
+   Geçiş sırasında ince bir sönümleme. Amaç süs değil geri bildirim:
+   tıklamayla yeni içeriğin gelmesi arasında ~100–300 ms var ve o aralıkta
+   hiçbir şey değişmezse tıklamanın işe yaramadığı sanılıyor.
+   İçeriği GİZLEMİYORUZ — eski ekran soluk da olsa okunur kalıyor;
+   boş beyaz bir ara kare, tam sayfa yenilemenin en rahatsız edici
+   yanıydı ve onu geri getirmek anlamsız olurdu.
+   =================================================================== */
+.vx-gecis main[data-bundle]{opacity:.55;transition:opacity .12s ease}
+main[data-bundle]{transition:opacity .16s ease}
+.vx-gecis{cursor:progress}
+
+
+/* ===================================================================
+   BTC AKINTISI
+
+   Eksik olan üçüncü boyut: bir altcoinin bir saatlik getirisinin büyük
+   kısmı o coinle ilgili değil, BTC'yle ilgili. Sistem her sembolü tek
+   başına ölçüyor ve altcoin short'unu farkında olmadan BTC'ye karşı
+   açıyordu.
+
+   Görsel karar: çatışan planı GİZLEMİYORUZ, işaretliyoruz. Bazen doğru
+   işlem tam da akıntıya karşı olandır; ama bunu bilmeden açmak pahalı.
+   =================================================================== */
+.mkpi__t--rejim>b{font-size:15px;letter-spacing:-.01em}
+.rejnot{display:block;font-style:normal;font-size:9.5px;color:var(--ink-3);
+  line-height:1.35;white-space:normal;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+
+.btc-roz{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+  border:1px solid var(--border);font-size:10px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;cursor:help;white-space:nowrap}
+.btc-roz--ters{color:var(--warn);border-color:rgba(246,199,107,.34);
+  background:rgba(246,199,107,.09);font-weight:600}
+.btc-roz--yan{color:var(--up);border-color:rgba(74,222,128,.28);
+  background:rgba(74,222,128,.07)}
+
+/* Açık pozisyondaki uyarı, plan satırındakinden daha yüksek sesli:
+   orada henüz karar verilmemiş, burada para zaten risk altında. */
+.btc-uyari{margin-bottom:7px;padding:7px 9px;border-radius:8px;
+  border:1px solid rgba(246,199,107,.3);background:rgba(246,199,107,.07);
+  color:#f6c76b;font-size:11px;line-height:1.5}
+
+
+/* ===================================================================
+   ÇOK ZAMAN DİLİMİ
+
+   Yönü büyük resim verir, zamanlamayı küçük resim. Tek zaman diliminde
+   çalışan bir sistem iki farklı soruyu aynı veriyle cevaplamaya çalışır
+   ve ikisinde de ortalama bir iş çıkarır.
+   =================================================================== */
+/* Üç ok: 4h / 1h / 15m. Kurulum tek zaman diliminde mi yaşıyor,
+   bir bakışta görünsün. */
+.zd{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:20px;
+  border:1px solid var(--border);cursor:help;white-space:nowrap}
+.zd i{display:inline-flex;align-items:center;gap:2px;font-style:normal;
+  font-size:10px;color:var(--ink-3);padding:0 3px}
+.zd i em{font-style:normal;font-size:8.5px;letter-spacing:.03em;opacity:.75}
+.zd i.up{color:var(--up)}
+.zd i.down{color:var(--down)}
+.zd--tam{border-color:rgba(74,222,128,.3);background:rgba(74,222,128,.06)}
+.zd--zayif{border-color:var(--border)}
+.zd--ters{border-color:rgba(248,113,113,.34);background:rgba(248,113,113,.07)}
+
+/* Zamanlama rozeti. "GEÇ KALINDI" en yüksek sesli olan: kovalamayı
+   engellemek bu katmanın asıl işi. */
+.gz{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+  font-size:9.5px;font-weight:700;letter-spacing:.05em;cursor:help;white-space:nowrap;
+  border:1px solid var(--border)}
+.gz--simdi{color:var(--up);border-color:rgba(74,222,128,.34);background:rgba(74,222,128,.1)}
+.gz--bekle{color:var(--ink-3)}
+.gz--gec{color:var(--warn);border-color:rgba(246,199,107,.36);background:rgba(246,199,107,.1)}
+
+/* Detaydaki üç satırlık bağlam: yön, zamanlama, BTC akıntısı. */
+/* HEDEF TABLOSU.
+   Bu tablo aylardir bicimsizdi: .plan-det__tp, .r-kar ve .r-kayip
+   siniflari JS'te uretiliyordu ama CSS'te KARSILIGI YOKTU, dolayisiyla
+   tarayicinin ham <table> gorunumu cikiyordu. Bes kademeye gecince
+   satir sayisi ikiye katlandi ve eksiklik gorunur hale geldi.
+   Sayilar sag hizali ve tabular: kademeler alt alta karsilastirilacak. */
+.plan-det__tp{margin-top:12px;padding:11px 12px;border-radius:9px;
+  background:rgba(255,255,255,.025);border:1px solid var(--border)}
+.plan-det__tp>span{display:block;font-size:9.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:8px}
+.plan-det__tp table{width:100%;border-collapse:collapse;
+  font-variant-numeric:tabular-nums}
+.plan-det__tp td{padding:4px 6px;font-size:11.5px;color:var(--ink-2);
+  border-bottom:1px solid rgba(255,255,255,.05)}
+.plan-det__tp tr:last-child td{border-bottom:0}
+.plan-det__tp td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+.plan-det__tp td:nth-child(2),.plan-det__tp td:nth-child(3),
+.plan-det__tp td:nth-child(4){text-align:right;white-space:nowrap}
+.plan-det__tp td:last-child{color:var(--ink-3);font-size:10.5px}
+.plan-det__tp .r-kar{color:var(--up);font-weight:600}
+.plan-det__tp .r-kayip{color:var(--down);font-weight:600}
+.plan-det__tp small{display:block;margin-top:9px;font-size:10.5px;
+  line-height:1.6;color:var(--ink-3)}
+.plan-det__tp small b{color:var(--ink-2);font-weight:600}
+/* Kademenin kaynagi: yapisal seviye mi, saf R kati mi. */
+.tp-kay{font-style:normal;font-size:8.5px;font-weight:600;letter-spacing:.04em;
+  padding:1px 4px;border-radius:4px;vertical-align:middle;margin-left:4px}
+.tp-kay--y{background:rgba(90,200,140,.14);color:#6fd3a0}
+.tp-kay--r{background:rgba(255,255,255,.07);color:var(--ink-3)}
+
+.plan-det__mtf{display:grid;gap:9px;margin-top:12px;padding:11px 12px;
+  border:1px solid var(--border);border-radius:9px;background:rgba(255,255,255,.018)}
+.plan-det__mtf>div{font-size:11.5px;line-height:1.55;color:var(--ink-2)}
+.plan-det__mtf span{display:block;font-size:9.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:3px}
+.plan-det__mtf b{color:var(--ink)}
+
+/* Son sunucu hataları — teşhis panelinin alt bölümü.
+   "Internal Server Error" cümlesi kullanıcıya hiçbir şey söylemiyordu:
+   hangi uç, hangi istisna, hangi satır. Artık burada duruyor ve SSH ile
+   log okumaya gerek kalmıyor. */
+.tsh__hata{margin-top:12px;padding:11px 12px;border-radius:9px;
+  border:1px solid rgba(248,113,113,.28);background:rgba(248,113,113,.05)}
+.tsh__hata>b{display:block;font-size:11.5px;color:#fca5a5;margin-bottom:7px}
+.tsh__hata details{border-top:1px solid rgba(255,255,255,.06);padding:6px 0}
+.tsh__hata details:first-of-type{border-top:0}
+.tsh__hata summary{cursor:pointer;font-size:11.5px;color:var(--ink-2);line-height:1.5}
+.tsh__hata summary span{font-weight:700;color:#fca5a5}
+.tsh__hata summary i{display:block;font-style:normal;font-size:10px;color:var(--ink-3);margin-top:2px}
+.tsh__hata pre{margin:7px 0 0;padding:9px;border-radius:7px;background:rgba(0,0,0,.4);
+  font-size:10.5px;line-height:1.5;color:var(--ink-3);overflow-x:auto;white-space:pre-wrap;
+  word-break:break-word;max-height:240px}
+
+/* İLK TARAMA BEKLEME DURUMU.
+   Soğuk önbellekte tarama 60-90 saniye sürüyor. Eskiden istek o kadar
+   bekletiliyordu; tarayıcı zaman aşımına uğruyor ve kullanıcı "çalışmıyor"
+   görüyordu. Artık sunucu hemen "hazır değil" diyor, biz durumu yazıp
+   birkaç saniyede bir tekrar bakıyoruz — bekleme görünür ve sonlu. */
+.plan-bekle{display:flex;align-items:center;justify-content:center;gap:9px}
+.plan-bekle__nokta{width:7px;height:7px;border-radius:50%;background:var(--accent,#7dd3fc);
+  animation:planNabiz 1.4s ease-in-out infinite}
+@keyframes planNabiz{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+
+/* ===================================================================
+   TERMİNAL DÜZENİ (09.09) — Coinbase Prime referansı
+
+   O tasarımın asıl gücü renkler değil YERLEŞİM: solda piyasa listesi,
+   ortada ana iş, sağda pozisyonlar, altta tablo — hepsi aynı anda
+   görünür, hiçbiri sayfa kaydırması gerektirmez.
+
+   Bir terminalde en pahalı şey kaydırmadır: bakmak istediğin iki sayı
+   aynı ekranda değilse onları kafanda tutmak zorunda kalırsın. Bu yüzden
+   sayfa DEĞİL, her sütun kendi içinde kayıyor.
+
+   1180 pikselin altında düzen anlamını yitiriyor (sütunlar okunamayacak
+   kadar darlaşır) — orada eski dikey akışa dönülüyor. Bu bir taviz
+   değil: dar ekranda üç sütun zorlamak, üçünü birden okunamaz yapardı.
+   =================================================================== */
+/* DAR EKRAN TABANI (<1180px) — terminal ızgarası devre dışı, dikey akış.
+   Paneller yine panel gibi görünmeli: sınırsız/çerçevesiz bir yığın,
+   nerede bir bölümün bitip diğerinin başladığını okunmaz yapıyordu. */
+.tterm{display:flex;flex-direction:column;gap:12px}
+.tterm__grid{display:flex;flex-direction:column;gap:12px}
+.tp{display:flex;flex-direction:column;min-width:0;
+  border:1px solid var(--border);border-radius:11px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,.025),rgba(255,255,255,.006))}
+.tp__head{display:flex;align-items:center;justify-content:space-between;gap:9px;
+  flex-wrap:wrap;padding:10px 13px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.022)}
+.tp__ad{font-size:13px;font-weight:600;color:var(--ink);
+  display:flex;align-items:center;gap:7px}
+.tp__sag{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.tp__seg{padding:10px 13px 0}
+.tp__body{padding:12px 13px}
+.premium-mentor-panel{min-height:0}
+.premium-mentor-panel .tp__body{padding:9px 11px 11px}
+.premium-mentor-panel .workspace__muted{font-size:10px;line-height:1.3}
+.premium-mentor-panel #premiumMentorMeta{margin-bottom:7px}
+.premium-mentor-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:7px}
+.premium-mentor-card{position:relative;min-width:0;padding:9px 10px;border:1px solid var(--border);border-radius:8px;background:rgba(255,255,255,.025)}
+.premium-mentor-card__top,.premium-mentor-card__stats{display:flex;align-items:center;justify-content:space-between;gap:7px}
+.premium-mentor-card__top{margin-bottom:8px}
+.premium-mentor-card__coin{display:flex;align-items:center;gap:6px;min-width:0;font-size:11px}
+.premium-mentor-card__coin b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.premium-mentor-card__coin small{display:block;color:var(--ink-3);font-size:9px}
+.premium-mentor-card__side{font-size:10px;font-weight:700}
+.premium-mentor-card__stats{font-size:10px;color:var(--ink-2)}
+.premium-mentor-card__stats b{color:var(--ink);font-size:11px}
+.premium-mentor-card__levels{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-top:7px;padding:5px 7px;border:1px solid var(--border);border-radius:6px;font-size:9.5px;color:var(--ink-2);background:rgba(255,255,255,.018)}
+.premium-mentor-card__levels b{font-size:10.5px;font-variant-numeric:tabular-nums;color:var(--ink)}
+.premium-mentor-card__levels small{font-size:8.5px;opacity:.7}
+.premium-mentor-card__sl b{color:var(--down)}
+.premium-mentor-card__tp b{color:var(--up)}
+.premium-mentor-card__rr{font-weight:700;color:var(--ink-2)}
+.premium-mentor-card__rr b{color:var(--warn)}
+.premium-mentor-card__actions{margin-top:8px}
+.premium-mentor-card__live{width:100%;font-size:9px;color:var(--warn);border-color:rgba(234,179,8,.28)}
+.premium-mentor-card__detail{display:block;margin-top:8px;color:var(--ink-3);font-size:9px;line-height:1.35;white-space:normal}
+.premium-mentor-card__detail summary{cursor:pointer;color:var(--ink-2);font-size:9px}
+.premium-mentor-card__detail p{margin:5px 0 0}
+.premium-mentor-table{width:100%;max-width:100%;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;padding-bottom:4px}
+.premium-mentor-table table{min-width:700px;table-layout:auto;white-space:nowrap}
+.premium-mentor-table th,.premium-mentor-table td{padding:8px 10px;vertical-align:middle}
+.premium-mentor-table th:first-child{min-width:130px}
+.premium-mentor-table td:last-child{white-space:normal;min-width:220px;max-width:320px;line-height:1.35}
+/* Dar ekranda dört sıralama sekmesi tam genişliğe yayılmasın. */
+.seg--blok{display:inline-flex;grid-template-columns:none;width:auto}
+.seg--blok button{padding:0 9px;font-size:10.5px}
+
+@media (min-width: 1180px) {
+  /* Sayfa kabuğu artık kaydırmıyor; sütunlar kaydırıyor. */
+  .workspace[data-page="mentor"]{display:flex;flex-direction:column;
+    height:100%;overflow:hidden;padding-bottom:0}
+  .tterm{display:flex;flex-direction:column;flex:1;min-height:0;gap:11px}
+  .tterm__grid{display:grid;grid-template-columns:246px minmax(0,1fr) 300px;
+    gap:11px;flex:1;min-height:0}
+
+  /* Panel: başlık sabit, gövde kayar. Prime'daki gibi kartlar arası
+     boşluk küçük ve kenarlıklar ince — panel sayısı fazla olduğunda
+     kalın çerçeveler ekranı hapishane parmaklığına çeviriyor. */
+  .tp{display:flex;flex-direction:column;min-height:0;min-width:0;
+    border:1px solid var(--border);border-radius:11px;overflow:hidden;
+    background:linear-gradient(160deg,rgba(255,255,255,.025),rgba(255,255,255,.006))}
+  .tp__head{display:flex;align-items:center;justify-content:space-between;gap:9px;
+    padding:9px 12px;border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,.022);flex:0 0 auto}
+  .tp__ad{font-size:12.5px;font-weight:600;color:var(--ink);
+    display:flex;align-items:center;gap:7px;white-space:nowrap}
+  .tp__sag{display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .tp__seg{padding:8px 10px 0;flex:0 0 auto}
+  .tp__body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:11px 12px}
+  .tp--orta .tp__body{padding:11px 12px 14px}
+  /* Sağ rayda paneller kart görünümünü bırakıyor: panel içinde panel
+     iki kat çerçeve demek. */
+  .tp--sag .panel{border:0;padding:0;background:transparent}
+  .tp--sag .gunluk-trade{padding:10px 0}
+
+  /* Araç şeridi ve açılan gövde alt sıraya sabitlendi; gövde açıldığında
+     ızgarayı ezmemesi için kendi yüksekliği sınırlı. */
+  .tterm .aracbar{margin-bottom:0;flex:0 0 auto}
+  .tterm .arac-govde{margin-bottom:0;flex:0 0 auto;max-height:38vh;overflow-y:auto}
+  .tterm .mkpi{margin-bottom:0;flex:0 0 auto}
+
+  /* Dar sol rayda radar tek sütun ve dört kolon. Konteyner genişliğine
+     göre kural yazmak (container query) daha doğru olurdu ama tarayıcı
+     desteği için sınıfla yapılıyor: JS hangi kabın içinde olduğunu
+     biliyor ve .radar--dar ekliyor. */
+  .radar--dar .radar-ikili{grid-template-columns:1fr}
+  .radar--dar .radar-head,.radar--dar .radar-row{
+    grid-template-columns:minmax(42px,1fr) 60px 48px 42px;gap:6px;
+    padding-left:5px;padding-right:5px}
+  .radar--dar .radar-head span:nth-child(n+5),
+  .radar--dar .radar-row>span:nth-child(n+5){display:none}
+  .radar--dar .radar-row__sym{font-size:11.5px}
+
+  /* Dar sol rayda dört sekme tek satıra ancak ızgarayla sığıyor. */
+  .seg--blok{display:grid;grid-template-columns:repeat(4,1fr);width:100%}
+  .seg--blok button{padding:0 4px;font-size:9.5px}
+}
+
+/* Durum çubuğu — Prime'daki "OPERATIONAL" satırının karşılığı.
+   Terminalin kendi sağlığı: sürüm, izlenen kontrat, senkron. Bir şey
+   durduysa burada görünür; kullanıcı log okumak zorunda kalmasın. */
+.tbar{display:flex;align-items:center;gap:18px;flex:0 0 auto;
+  padding:7px 12px;border-top:1px solid var(--border);
+  font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.tbar b{color:var(--ink-2);font-weight:600}
+.tbar__d{width:6px;height:6px;border-radius:50%;background:var(--up);
+  box-shadow:0 0 0 3px rgba(74,222,128,.14);flex:0 0 auto}
+.tbar__son{margin-left:auto}
+@media(max-width:700px){.tbar{gap:11px;flex-wrap:wrap}.tbar__son{margin-left:0;width:100%}}
+
+/* Sağ raydaki sekmelerde sayı rozeti */
+.seg button .tag{margin-left:5px;font-style:normal;padding:0 5px;font-size:9px}
+
+/* Terminal düzeninde ÜST BOŞLUK KISILIYOR.
+   Prime'da başlık tek satır; bizde başlık + alt açıklama + KPI şeridi
+   ekranın üçte birini yiyordu. Bir terminalde dikey piksel, veri
+   gösterilecek yerdir — açıklama metni bir kez okunur, tablo her gün. */
+@media (min-width: 1180px) {
+  .workspace[data-page="mentor"] .workspace__header{margin-bottom:10px}
+  .workspace[data-page="mentor"] .workspace__subtitle{display:none}
+  .workspace[data-page="mentor"] .workspace__title{font-size:19px}
+  .workspace[data-page="mentor"] .workspace__eyebrow{font-size:10px}
+
+  /* KPI kutuları tek satıra iniyor: etiket üstte küçük, değer altında.
+     Alt not satırı ipucuna taşındı. */
+  .tterm .mkpi__t{padding:8px 11px}
+  .tterm .mkpi__t>b{font-size:16px;margin-top:3px}
+  .tterm .mkpi__t>i:not(.lsnot){display:none}
+  .tterm .mkpi__t--ls .lsbar{margin:5px 0 3px}
+  .tterm .mkpi__t--ls .lsnot{font-size:9px;-webkit-line-clamp:1}
+
+  /* Uyarı bandı da tek satır. */
+  .tterm .gunluk-gate{padding:9px 12px;font-size:11.5px}
+  .tterm #gunlukBinance{flex:0 0 auto}
+}
+
+/* 1180-1420 ARASI: YAN SÜTUNLAR DARALIR, ORTA SÜTUN KORUNUR.
+   1280 piksellik bir dizüstünde yan sütunlar sabit 246+300 kalınca orta
+   sütun 402 pikselde kalıyordu ve tablo en dar moda düşüp STOP FİYATINI
+   gizliyordu. Stop, satırdaki en önemli sayı — riski o tanımlıyor.
+   Kırpılacaksa radar ve sağ panel kırpılır, kurulum tablosu değil. */
+@media(min-width:1180px) and (max-width:1420px){
+  .tterm__grid{grid-template-columns:206px minmax(0,1fr) 252px;gap:9px}
+}
+
+/* KURULUM BILDIRIMI ONIZLEMESI.
+   Gonderilecekler ve ELENENLER birlikte gosteriliyor. Elenenleri
+   gizlemek "neden bildirim gelmiyor" sorusunu cevapsiz birakirdi;
+   sebebi yazmak, ayarin hangi kapisinin kapali oldugunu tek bakista
+   gosteriyor. */
+.pbil{margin-top:12px;padding:11px 12px;border-radius:9px;
+  border:1px solid var(--border);background:rgba(255,255,255,.02)}
+.pbil__ust{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;
+  margin-bottom:9px}
+.pbil__baslik{font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;
+  color:var(--ink-3)}
+.pbil__ust .workspace__muted{font-size:11px}
+.pbil__liste{display:grid;gap:6px;max-height:290px;overflow-y:auto}
+.pbil__ok{padding:8px 10px;border-radius:7px;
+  border:1px solid rgba(90,200,140,.28);background:rgba(90,200,140,.07)}
+.pbil__ok b{display:block;font-size:12px;color:var(--ink);margin-bottom:4px}
+.pbil__ok pre{margin:0;font:inherit;font-size:11px;line-height:1.55;
+  color:var(--ink-2);white-space:pre-wrap;word-break:break-word}
+.pbil__el{display:flex;gap:8px;align-items:baseline;font-size:11px;
+  color:var(--ink-3);padding:3px 2px}
+.pbil__el span{min-width:62px;color:var(--ink-2);font-weight:600}
+.pbil .panel__actions{margin-top:9px}
+
+/* BINANCE ACIK POZISYON SERIDI (mentor sayfasi)
+   Bu panel aylardir HIC cizilmiyordu: renderer basarili cevapta paneli
+   gizleyip iceriGi siliyordu, dolayisiyla stili de hic gerekmemisti.
+   Renderer duzeltilince stil de gerekti. */
+.gb{padding:0;overflow:hidden}
+.gb__head{display:flex;align-items:center;gap:10px;padding:10px 14px;
+  border-bottom:1px solid var(--border);background:rgba(255,255,255,.022)}
+.gb__head>span{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3)}
+.gb__head>b{font-size:11.5px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.gb__head>.btn{margin-left:auto}
+.gb__liste{display:grid}
+.gb__satir{display:grid;grid-template-columns:minmax(0,1fr) 88px 88px 92px;
+  gap:10px;align-items:center;padding:8px 14px;
+  border-bottom:1px solid rgba(255,255,255,.045);font-variant-numeric:tabular-nums}
+.gb__satir:last-child{border-bottom:0}
+.gb__sym{display:flex;align-items:center;gap:7px;min-width:0}
+.gb__sym b{font-size:12px;color:var(--ink);overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap}
+.gb__yon{font-style:normal;font-size:8.5px;font-weight:700;letter-spacing:.04em;
+  padding:1px 5px;border-radius:4px}
+.gb__yon.up{background:rgba(90,200,140,.15);color:var(--up)}
+.gb__yon.down{background:rgba(229,103,125,.15);color:var(--down)}
+.gb__n{font-size:11px;color:var(--ink-2);text-align:right}
+.gb__pnl{font-size:12px;font-weight:600;text-align:right}
+.gb__pnl.up{color:var(--up)}
+.gb__pnl.down{color:var(--down)}
+@media(max-width:640px){
+  .gb__satir{grid-template-columns:minmax(0,1fr) 84px;row-gap:3px}
+  .gb__n{display:none}
+}
+.smc-flow__summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; margin:16px 0; }
+.smc-flow__summary > div { display:grid; gap:6px; min-width:0; }
+.smc-flow__summary span { font-size:11px; opacity:.65; }
+.smc-flow__summary b { font-size:13px; overflow-wrap:anywhere; }
+.smc-flow__steps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+.smc-flow__step { display:flex; align-items:center; gap:8px; padding:12px; border:1px solid #333; border-radius:8px; font-size:12px; }
+.smc-flow__step i { font-style:normal; color:#9cb5ff; }
+.smc-flow__step b { margin-left:auto; color:#9cb5ff; }
+.smc-flow__step.is-wait { opacity:.55; }
+.smc-flow__footer { display:flex; flex-wrap:wrap; gap:12px; margin-top:16px; font-size:12px; line-height:1.6; }
+.smc-flow__footer span { opacity:.7; }
+.settings-index { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.settings-index a { padding:10px 16px; border:1px solid #383838; border-radius:8px; color:inherit; text-decoration:none; }
+.settings-index a:hover, .settings-index a:focus-visible { background:#292929; }
+#settings-account .workspace__settings-grid { grid-template-columns:minmax(0,1fr); }
+[id^="settings-"] { scroll-margin-top:80px; }
+@media(max-width:800px) { .smc-flow__steps { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(max-width:480px) { .smc-flow__summary,.smc-flow__steps { grid-template-columns:minmax(0,1fr); } }
+.smc-desk { max-width:1500px; margin:auto; }
+.smc-desk__header { display:flex; justify-content:space-between; align-items:center; gap:24px; margin:24px 0 36px; }
+.smc-desk__header h1 { font-size:clamp(26px,3vw,38px); letter-spacing:-1px; margin:10px 0; }
+.smc-desk__header p { color:#aaa; margin:0; }
+.smc-desk__metrics { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin-bottom:28px; }
+.smc-desk__metrics > div { display:grid; gap:10px; padding:22px; border:1px solid #333; border-radius:12px; }
+.smc-desk__metrics span,.smc-desk__metrics small { color:#999; font-size:12px; }
+.smc-desk__metrics b { font-size:24px; }
+.smc-desk__layout { display:grid; grid-template-columns:minmax(280px,.85fr) minmax(0,1.4fr); gap:20px; }
+.smc-desk__layout > .panel { padding:24px; min-width:0; }
+.smc-desk__layout .smc-flow__steps { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.smc-desk__search { display:flex; align-items:center; gap:10px; padding-bottom:22px; border-bottom:1px solid #333; }
+.smc-desk__search .input { min-width:0; flex:1; }
+.smc-desk__selection { display:flex; align-items:center; gap:16px; margin-top:28px; }
+.smc-desk__candidate { width:100%; text-align:left; display:flex; justify-content:space-between; gap:16px; background:transparent; color:inherit; padding:18px 8px; border:0; border-bottom:1px solid #333; cursor:pointer; }
+.smc-desk__candidate:hover,.smc-desk__candidate:focus-visible { background:#282828; }
+.smc-desk__candidate span { display:grid; gap:7px; }
+.smc-desk__candidate small { font-size:11px; color:#aaa; line-height:1.5; }
+.smc-desk__footer { display:flex; flex-wrap:wrap; gap:20px; margin:28px 0; color:#999; font-size:12px; }
+.smc-desk__footer a { color:inherit; }
+@media(max-width:900px) { .smc-desk__layout { grid-template-columns:minmax(0,1fr); } }
+@media(max-width:600px) { .smc-desk__metrics { grid-template-columns:minmax(0,1fr); } .smc-desk__header { align-items:flex-start; flex-direction:column; } .smc-desk__search { flex-wrap:wrap; } .smc-desk__layout .smc-flow__steps { grid-template-columns:minmax(0,1fr); } }

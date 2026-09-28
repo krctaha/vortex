@@ -1,0 +1,135 @@
+/* PORTFÖY — BİNANCE HESABININ CANLI ÖZETİ
+   =========================================================================
+   TASARIM KARARI: hiyerarşi, dekorasyon değil.
+
+   Referans tasarımın (BitGo panosu) asıl gücü rengi değil sırası:
+   tek bir büyük sayı üstte, altında onu açan satırlar, sağda bağlam.
+   Eski panellerde bu sıra yoktu — her kutu aynı görsel ağırlıkta
+   bağırıyordu ve göz nereye bakacağını bilmiyordu. Buradaki tek kural:
+   sayfada TEK bir 44 piksellik sayı var; geri kalan her şey ondan küçük.
+
+   Renk yalnızca VERİ için: yeşil/kırmızı sadece kâr-zarara ayrılmış,
+   mor sadece eyleme. Kenarlıklar ve yüzeyler tek nötr sistem — bir
+   panelin "önemli" olduğunu renkle değil boşlukla söylüyoruz.
+   ========================================================================= */
+
+.pf{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:14px;align-items:start}
+.pf__ana,.pf__yan{display:grid;gap:14px;min-width:0}
+
+/* --- KART: tek bir yüzey dili ------------------------------------------ */
+.pf-kart{border:1px solid var(--border);border-radius:var(--r-xl);
+  background:var(--panel);overflow:hidden}
+.pf-kart__head{display:flex;align-items:center;justify-content:space-between;
+  gap:10px;padding:13px 16px;border-bottom:1px solid var(--border)}
+.pf-kart__head>span{font-size:10px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink-3)}
+.pf-rozet{font-size:11px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+
+/* --- HERO -------------------------------------------------------------- */
+.pf-hero{border:1px solid var(--border);border-radius:var(--r-xl);
+  background:linear-gradient(150deg,rgba(255,255,255,.055),rgba(255,255,255,.008) 50%);
+  padding:20px 22px 18px}
+.pf-hero__ust{display:flex;align-items:flex-start;justify-content:space-between;
+  gap:16px;flex-wrap:wrap}
+.pf-hero__etiket{display:flex;align-items:center;gap:6px;font-size:10px;
+  letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3)}
+.pf-ipucu{font-style:normal;width:14px;height:14px;border-radius:50%;
+  display:inline-flex;align-items:center;justify-content:center;font-size:9px;
+  background:rgba(255,255,255,.08);color:var(--ink-3);cursor:help}
+/* Sayfadaki TEK büyük sayı. Rakamlar tabular: canlı tazelemede
+   basamak genişliği değişirse sayı zıplar ve göz onu "değişti" sanır. */
+.pf-hero__deger{margin-top:7px;font-size:44px;line-height:1.05;font-weight:600;
+  letter-spacing:-.025em;color:var(--ink);font-variant-numeric:tabular-nums}
+.pf-hero__alt{margin-top:7px;font-size:12.5px;color:var(--ink-2)}
+.pf-hero__sag{display:flex;align-items:center;gap:9px}
+.pf-tazelik{font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.pf-hero__bar{position:relative;height:5px;border-radius:3px;margin-top:17px;
+  background:rgba(255,255,255,.07);overflow:hidden}
+.pf-bar__dolu{height:100%;border-radius:3px;background:#fff;
+  transition:width .35s ease}
+.pf-bar__dolu.is-yuksek{background:#f0a35e}
+.pf-bar__dolu.is-kritik{background:#e5677d}
+.pf-hero__bar-not{margin-top:7px;font-size:10.5px;color:var(--ink-3)}
+
+/* --- ÖZET SATIRLARI ---------------------------------------------------- */
+.pf-satirlar{padding:4px 0}
+.pf-satir{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  padding:10px 16px;border-bottom:1px solid rgba(255,255,255,.045)}
+.pf-satir:last-child{border-bottom:0}
+.pf-satir__ad{font-size:12px;color:var(--ink-2);display:flex;align-items:center;gap:6px}
+.pf-satir__deger{font-size:13.5px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.pf-satir__deger.up{color:var(--up)}
+.pf-satir__deger.down{color:var(--down)}
+.pf-satir--vurgu{background:rgba(255,255,255,.022)}
+
+/* --- POZİSYON SATIRLARI ------------------------------------------------
+   Tablo değil, satır kartı: mobilde tablo ya taşar ya da okunmaz hale
+   gelecek kadar küçülür. Burada aynı yapı her genişlikte çalışıyor. */
+.pf-poz{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;
+  padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.045)}
+.pf-poz:last-child{border-bottom:0}
+.pf-poz__sol{display:flex;align-items:center;gap:9px;min-width:0}
+.pf-poz__sym{font-size:13px;font-weight:600;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pf-poz__yon{font-size:9px;font-weight:700;letter-spacing:.05em;padding:2px 6px;
+  border-radius:4px}
+.pf-poz__yon.up{background:rgba(90,200,140,.15);color:var(--up)}
+.pf-poz__yon.down{background:rgba(229,103,125,.15);color:var(--down)}
+.pf-poz__kald{font-size:9.5px;color:var(--ink-3);padding:2px 5px;border-radius:4px;
+  background:rgba(255,255,255,.06)}
+.pf-poz__pnl{text-align:right;font-size:14px;font-weight:600;
+  font-variant-numeric:tabular-nums;white-space:nowrap}
+.pf-poz__pnl.up{color:var(--up)}
+.pf-poz__pnl.down{color:var(--down)}
+.pf-poz__alt{grid-column:1;font-size:11px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;display:flex;gap:12px;flex-wrap:wrap}
+.pf-poz__roi{grid-column:2;text-align:right;font-size:11px;
+  font-variant-numeric:tabular-nums}
+.pf-poz__roi.up{color:var(--up)}
+.pf-poz__roi.down{color:var(--down)}
+
+/* --- RİSK -------------------------------------------------------------- */
+.pf-risk{padding:4px 0}
+.pf-risk__satir{display:flex;align-items:baseline;justify-content:space-between;
+  gap:10px;padding:9px 16px}
+.pf-risk__ad{font-size:11.5px;color:var(--ink-2)}
+.pf-risk__deger{font-size:13px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums}
+.pf-risk__not{padding:0 16px 13px;font-size:10.5px;line-height:1.6;color:var(--ink-3)}
+.pf-risk__uyari{margin:0 16px 13px;padding:9px 11px;border-radius:8px;font-size:11px;
+  line-height:1.55;border:1px solid rgba(240,163,94,.32);background:rgba(240,163,94,.09);
+  color:#f0c48e}
+
+/* --- TEŞHİS ------------------------------------------------------------ */
+.pf-teshis{padding:12px 16px;display:grid;gap:7px}
+.pf-teshis__adim{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;
+  line-height:1.5}
+.pf-teshis__nokta{flex:none;width:7px;height:7px;border-radius:50%;margin-top:5px;
+  background:var(--ink-3)}
+.pf-teshis__nokta.ok{background:var(--up)}
+.pf-teshis__nokta.warn{background:#f0a35e}
+.pf-teshis__nokta.err{background:var(--down)}
+.pf-teshis__ad{color:var(--ink-2);font-weight:600}
+.pf-teshis__mesaj{color:var(--ink-3);display:block;margin-top:2px}
+
+/* --- BOŞ / HATA -------------------------------------------------------- */
+.pf-bos{padding:22px 16px;text-align:center;font-size:12.5px;color:var(--ink-3);
+  line-height:1.7}
+.pf-bos b{color:var(--ink-2)}
+.pf-bos .btn{margin-top:11px}
+.pf-bayat{margin:0 0 14px;padding:10px 13px;border-radius:9px;font-size:11.5px;
+  line-height:1.55;border:1px solid rgba(240,163,94,.32);
+  background:rgba(240,163,94,.09);color:#f0c48e}
+
+/* --- DAR EKRAN ---------------------------------------------------------
+   Yan sütun altına iniyor. Eşik 1100: 320 piksellik yan sütun + 16
+   boşluk + ana sütunun okunabilir asgarisi (~700) burada tükeniyor. */
+@media(max-width:1100px){
+  .pf{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:520px){
+  .pf-hero{padding:16px 15px 14px}
+  .pf-hero__deger{font-size:34px}
+  .pf-satir,.pf-poz{padding-left:13px;padding-right:13px}
+}

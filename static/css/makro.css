@@ -1,0 +1,64 @@
+/* MAKRO PANEL — kripto dışı bağlam.
+   =========================================================================
+   Bu sayfa SİNYAL ÜRETMİYOR. Tasarım da bunu söylemeli: renk yalnızca
+   yön için, hiçbir kart "al/sat" enerjisi taşımıyor, vurgu (lila) hiç
+   kullanılmıyor — lila eylem rengi ve burada eylem yok.
+
+   "Veri bekleniyor" kartı bilinçli olarak SOLUK ama görünür: eksikliği
+   gizlemek, kullanıcının altı varlıktan ikisini gördüğünü fark etmemesi
+   demek olurdu.
+   ========================================================================= */
+.mkr{display:grid;gap:14px;align-items:start}
+.mkr__izgara{padding:16px 18px;display:grid;gap:18px}
+.mkr__grup>span{display:block;font-size:9.5px;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:9px}
+.mkr__satir{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  gap:11px}
+
+.mkr__k{padding:14px 16px;border:1px solid var(--border);
+  border-radius:var(--r-lg);background:rgba(255,255,255,.022);min-width:0}
+.mkr__ad{display:flex;align-items:center;gap:7px;font-size:11px;
+  color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mkr__kay{font-style:normal;font-size:8.5px;letter-spacing:.04em;
+  text-transform:uppercase;padding:1px 5px;border-radius:4px;
+  background:rgba(255,255,255,.06);color:var(--ink-3);flex:0 0 auto}
+.mkr__f{display:block;margin-top:8px;font-size:22px;font-weight:600;
+  letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums}
+.mkr__d{display:inline-block;margin-top:6px;font-size:12.5px;font-weight:600;
+  color:var(--ink-3);font-variant-numeric:tabular-nums}
+.mkr__d.up{color:var(--up)}
+.mkr__d.down{color:var(--down)}
+.mkr__not{display:block;margin-top:5px;font-size:10px;color:var(--ink-3);
+  line-height:1.45}
+
+/* Eksik veri GİZLENMİYOR, soluklaştırılıyor. Altı varlıktan ikisi
+   geldiyse kullanıcı bunu görmeli. */
+.mkr__k--yok{border-style:dashed;background:transparent}
+.mkr__k--yok .mkr__f{font-size:14px;font-weight:500;color:var(--ink-3);
+  margin-top:10px}
+
+/* Teşhis */
+.mkr__teshis{display:grid;gap:8px;margin-top:13px}
+.mkr__t{display:flex;gap:9px;align-items:flex-start;font-size:11.5px;
+  line-height:1.5}
+.mkr__tn{flex:none;width:7px;height:7px;border-radius:50%;margin-top:5px;
+  background:var(--ink-3)}
+.mkr__tn.ok{background:var(--up)}
+.mkr__tn.err{background:var(--down)}
+.mkr__t b{color:var(--ink-2)}
+.mkr__t i{font-style:normal;color:var(--ink-3);font-size:10.5px;
+  margin-left:4px}
+.mkr__t span span{display:block;margin-top:2px;color:var(--ink-3);
+  word-break:break-word}
+.mkr__tnot{font-size:10.5px;line-height:1.6;color:var(--ink-3);
+  padding-top:9px;border-top:1px solid var(--border)}
+.mkr__yas{font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+
+@media(min-width:1240px){
+  .mkr{grid-template-columns:minmax(0,1fr) 360px}
+}
+@media(max-width:520px){
+  .mkr__izgara{padding:14px 13px}
+  .mkr__satir{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:9px}
+  .mkr__f{font-size:19px}
+}

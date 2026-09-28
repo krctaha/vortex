@@ -1,0 +1,23 @@
+/* Neutral matte surfaces. Green/red remain reserved for market direction. */
+:root{--page:#080808;--shell:#0c0c0c;--ray-bg:#090909;--surface:#121212;--surface-1:#121212;--surface-2:#191919;--surface-3:#222;--panel:#121212;--panel-background:#121212;--border:#292929;--border-strong:#414141;--ink:#ededed;--ink-1:#ededed;--ink-2:#b4b4b4;--ink-3:#969696;--ink-4:#838383;--accent:#e5e5e5;--shadow:none}
+body{background:#050505!important}.app,.icerik,.main{background-image:linear-gradient(145deg,#080808 0%,#0c0c0c 48%,#070707 100%)!important}
+.dashboard{color:var(--ink)}
+.panel,.dash-panel,.dash-stats article,.workspace__kpi,.plan-card,.workspace__chart,.chart-box{background:linear-gradient(145deg,#171717 0%,#111 48%,#0c0c0c 100%)!important;box-shadow:none!important;border-color:var(--border)}
+.plan-card{background:linear-gradient(135deg,#1b1b1b,#121212 72%,#0f0f0f)!important}
+.dash-ring div{background:var(--surface)}
+.dash-pill{background:#191919;border-color:#333;color:#c5c5c5}
+.dash-eyebrow,.dash-note,.dash-panel-head p,.dash-heading p,.dash-stats span,.dash-stats small,.dash-footer,.dashboard th,.plan-score small,.plan-levels span,.ticker-track small{color:var(--ink-3)}
+.dashboard select,.input,.terminal-form input,.terminal-form select{background:#181818;color:var(--ink);border-color:#363636}
+.dashboard select,.terminal-form select{max-width:100%}
+.dashboard th,.dashboard td,.ticker-strip,.dashboard hr,.cross-watch div{border-color:var(--border)}
+.btn{box-shadow:none!important;background-image:none!important}
+.plan-levels b,.plan-card button{color:var(--ink)}
+.ray__dnokta{box-shadow:none!important}
+.settings-grid{align-items:start;gap:18px}.settings-wide{grid-column:1/-1}.terminal-form label{line-height:1.6}.terminal-form.vertical{gap:16px}.terminal-form .settings-check input{width:auto;min-height:auto}.settings-shortcuts{margin-bottom:20px}.terminal-form select{min-width:200px}.settings-wide .terminal-form{align-items:end;gap:14px}.settings-wide .terminal-form label{flex:1;max-width:440px}
+.dash-panel-head h2{line-height:1.5}.plan-card{padding:20px}.dash-heading h1{font-weight:500}.dashboard .btn:focus-visible,.terminal-form input:focus-visible,.terminal-form select:focus-visible{outline:2px solid #bcbcbc;outline-offset:3px}
+#openPositions{max-height:360px;overflow:auto}.dash-table-wrap a{color:var(--ink);text-decoration:underline;text-underline-offset:3px}#pendingRecords td:nth-child(2),#openPositions td:nth-child(2){white-space:normal;min-width:220px}
+@media(max-width:650px){.settings-wide .terminal-form{flex-direction:column;align-items:stretch}.settings-wide .terminal-form label{max-width:none}.plan-card{padding:16px}}
+#modeChip[data-stream-state="live"] .dot{background:var(--up)}#modeChip[data-stream-state="stale"] .dot,#modeChip[data-stream-state="reconnecting"] .dot{background:#b99862;animation:none}#modeChip[data-stream-state="demo"] .dot{background:#b99862;animation:none}
+.users-dialog{width:min(460px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--border-strong);border-radius:14px;padding:24px}.users-dialog::backdrop{background:rgba(0,0,0,.75)}.users-dialog h2{font-size:17px;margin:0}.users-dialog .terminal-form{margin-top:16px}.users-dialog footer{display:flex;gap:10px;margin-top:18px}.user-actions{display:flex;gap:8px}.user-actions button{white-space:nowrap}.users-table .btn[disabled]{opacity:.4;cursor:not-allowed}
+.users-dialog [hidden],#usersError[hidden]{display:none!important}
+.trade-mini-chart{display:block;width:168px;height:66px;background:linear-gradient(140deg,#141414,#090909);border:1px solid #252525;border-radius:6px}.dashboard td[data-trade-chart]{padding:8px 12px}
