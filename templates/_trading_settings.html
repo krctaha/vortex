@@ -1,0 +1,64 @@
+<section class="settings-trading workspace__section" id="trading-settings">
+  <div class="settings-trading__head">
+    <div>
+      <div class="panel__title">Otomatik İşlem ve Risk</div>
+      <div class="workspace__muted">Para katmanı, canlı emir anahtarı, risk sınırları ve Binance bağlantısı tek yerde.</div>
+    </div>
+    <div class="panel__actions">
+      <button class="btn" id="copyToggleBtn" type="button">Durum yükleniyor</button>
+      {% if is_admin %}<button class="btn btn--danger" id="liveToggleBtn" type="button">Canlı durumu</button>{% endif %}
+    </div>
+  </div>
+
+  <div class="workspace__warning" id="copyModeWarning"><b>DURUM KONTROL EDİLİYOR:</b> Canlı emir anahtarının durumu yükleniyor.</div>
+  <div class="panel settings-trading__status">
+    <div class="panel__title">İşlem katmanı</div>
+    <div class="workspace__muted" id="copyMeta">Durum yükleniyor…</div>
+  </div>
+
+  <details class="workspace-disclosure workspace__section">
+    <summary><span><b>Para ve risk ayarları</b><small>Günlük kayıp, işlem riski, kaldıraç ve eş zamanlı işlem sınırı</small></span><span>Ayarları aç</span></summary>
+    <div class="workspace-disclosure__body">
+      <form id="copySettingsForm" class="panel workspace__runtime-settings">
+        <div class="panel__head">
+          <div><div class="panel__title">Risk Çerçevesi</div><div class="workspace__muted">Bu değerler yalnız para katmanını sınırlar. Araştırma motoru arka planda kurulum ölçmeye devam eder.</div></div>
+          <div class="panel__actions"><span class="workspace__muted" id="copySaveState">Hazır</span><button class="btn btn--primary" type="submit">Kaydet</button></div>
+        </div>
+        <div class="workspace__form-grid">
+          <div class="field"><label class="field__label">Toplam bakiye ($)</label><input class="input" type="number" step="1" min="1" name="risk.total_margin"><div class="workspace__muted">Yalnız gösterim ve oran hesabı için.</div></div>
+          <div class="field"><label class="field__label">Risk profili</label><select class="input" name="risk.risk_profile"><option value="conservative">Korumacı</option><option value="balanced">Dengeli</option><option value="aggressive">Agresif</option></select></div>
+          <div class="field"><label class="field__label">İşlem başına max risk ($)</label><input class="input" type="number" step="0.25" min="0.25" name="risk.max_risk_per_trade"></div>
+          <div class="field"><label class="field__label">Günlük kayıp limiti ($)</label><input class="input" type="number" step="0.25" min="0.25" name="risk.daily_loss_limit"><div class="workspace__muted">Gerçekleşmiş günlük zarar bu sınıra ulaşırsa yeni pozisyon açılmaz.</div></div>
+          <div class="field"><label class="field__label">Pozisyon max margin ($)</label><input class="input" type="number" step="1" min="1" name="risk.max_position_margin"></div>
+          <div class="field"><label class="field__label">Varsayılan kaldıraç</label><input class="input" type="number" step="1" min="1" max="50" name="risk.default_leverage"></div>
+          <div class="field"><label class="field__label">Aynı anda max açık işlem</label><input class="input" type="number" step="1" min="1" max="30" name="copy.max_open_trades"></div>
+          <div class="field"><label class="field__label">Güven eşiği (|t|)</label><input class="input" type="number" step="0.1" min="0" max="10" name="copy.min_t_to_mirror"><div class="workspace__muted">Parayla aynalamada gereken minimum sinyal gücü. 0 yazmak filtreyi kaldırır.</div></div>
+          <div class="field"><label class="field__label">Otomatik aynalama</label><select class="input" name="copy.auto_mirror"><option value="true">Açık</option><option value="false">Kapalı</option></select><div class="workspace__muted">Kapalıyken ölçüm motoru çalışır; yeni para emri açılmaz.</div></div>
+        </div>
+      </form>
+    </div>
+  </details>
+
+  {% if is_admin %}
+  <details class="workspace-disclosure workspace__section">
+    <summary><span><b>Binance API bağlantısı</b><small>Yalnız yönetici · anahtar, güvenlik testi ve canlı emir izni</small></span><span>Bağlantıyı aç</span></summary>
+    <div class="workspace-disclosure__body">
+      <section class="panel" id="tradingPanel">
+        <div class="panel__head">
+          <div><div class="panel__title">Binance Bağlantısı <span class="tag tag--warn">yönetici</span></div><div class="workspace__muted">API anahtarı şifrelenerek saklanır ve tekrar gösterilmez. Manuel açılmış pozisyonlara motor dokunmaz.</div></div>
+          <div class="panel__actions"><button class="btn" type="button" id="tradeTestBtn">Bağlantıyı test et</button></div>
+        </div>
+        <div class="workspace__warning" style="margin-bottom:14px"><b>Güvenlik:</b> Futures yetkisi açık, para çekme yetkisi kapalı olmalı. IP kısıtına <code>77.42.28.224</code> eklenmeli. Canlı işlem açılmadan önce test denetimi çalıştırılmalı.</div>
+        <div class="workspace__muted" id="tradeState">Durum yükleniyor…</div>
+        <div id="tradeChecks"></div>
+        <form class="workspace__form-grid" id="tradeKeyForm" style="margin-top:14px">
+          <div class="field"><label class="field__label">API Key</label><input class="input" name="api_key" type="password" autocomplete="off" spellcheck="false" placeholder="Binance'ten kopyala"></div>
+          <div class="field"><label class="field__label">API Secret</label><input class="input" name="api_secret" type="password" autocomplete="off" spellcheck="false" placeholder="yalnızca oluşturulurken gösterilir"></div>
+          <div class="field" style="align-self:end"><button class="btn btn--primary" type="submit" style="width:100%">Anahtarı kaydet</button></div>
+          <div class="field" style="align-self:end"><button class="btn btn--danger" type="button" id="tradeKeyDelete" style="width:100%">Anahtarı sil</button></div>
+        </form>
+      </section>
+    </div>
+  </details>
+  {% endif %}
+</section>

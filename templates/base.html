@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark">
+  <meta name="theme-color" content="#0b0b0b">
+  <title>{% block title %}VORTEX{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="/static/img/favicon.svg?v=2">
+
+  <!-- PWA: iPhone'da Safari > Paylas > Ana Ekrana Ekle ile kurulur.
+       apple-mobile-web-app-capable olmadan tam ekran calismaz;
+       apple-touch-icon olmadan iOS ekran goruntusu kullanir. -->
+  <link rel="manifest" href="/static/manifest.webmanifest?v=2">
+  <link rel="apple-touch-icon" sizes="180x180" href="/static/img/apple-touch-icon.png?v=2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="VORTEX">
+  <meta name="application-name" content="VORTEX">
+  <script>
+    /* Yan menu genisligi ILK BOYAMADAN once belirlenir. Bu blok
+       stylesheet'ten once calisiyor; sonra calissaydi menu genis
+       acilip gozle gorulur sekilde daraliyordu (FOUC). */
+    (function () {
+      var m = "wide";
+      try {
+        if (window.innerWidth <= 1180) m = "icon";
+        else if (localStorage.getItem("vx.rail") === "icon") m = "icon";
+      } catch (e) { m = "wide"; }
+      document.documentElement.setAttribute("data-rail", m);
+    })();
+  </script>
+  <!-- Inter — tasarım sisteminin gövde yüzü. ss03 stilistik seti
+       (tek katlı alternatif "g") sistemin imzası; onsuz tipografi
+       "düz Inter" gibi görünüyor. preconnect ilk boyamayı hızlandırıyor. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/static/css/vortex.css?v={{ build_id }}">
+  {% block styles %}{% endblock %}
+  <link rel="stylesheet" href="/static/css/vortex-clean.css?v={{ build_id }}">
+  <!-- Kabuk ve palet EN SONDA: sayfa CSS'lerini degil, onlarin altindaki
+       tokenlari tanimliyor. Bu dosya topnav.css'in yerini aldi; eskisi
+       silinmedi ama artik yuklenmiyor. -->
+  <link rel="stylesheet" href="/static/css/kabuk.css?v={{ build_id }}">
+  <link rel="stylesheet" href="/static/css/matte.css?v={{ build_id }}">
+  <link rel="stylesheet" href="/static/css/text-nav.css?v={{ build_id }}">
+</head>
+<body>
+{% block body %}{% endblock %}
+<script src="/static/js/vortex-core.js?v={{ build_id }}"></script>
+<script src="/static/js/push.js"></script>
+<script src="/static/js/ray.js?v={{ build_id }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

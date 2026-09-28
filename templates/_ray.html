@@ -1,0 +1,9 @@
+<nav class="ray text-nav" id="ray" aria-label="Panel gezinmesi">
+  <a class="text-nav__brand" href="/" aria-label="VORTEX Dashboard">VORTEX</a>
+  <div class="ray__menu" id="rayMenu" aria-label="Ana gezinme">
+    {% for url,key,label in [('/', 'dashboard','Dashboard'),('/piyasalar','markets','Piyasalar'),('/analiz','analiz','Grafik Analizi'),('/islem-karnesi','journal','İşlem Karnesi'),('/global-piyasalar','cross','Global Piyasalar'),('/haberler','haber','Gündem'),('/takvim','takvim','Takvim'),('/ayarlar','settings','Ayarlar')] %}
+    <a class="rail__item {% if page == key %}is-active{% endif %}" href="{{ url }}"{% if page == key %} aria-current="page"{% endif %}>{{ label }}</a>
+    {% endfor %}
+  </div>
+  <div hidden aria-hidden="true"><span id="rayDNokta"></span><span id="rayDBaslik"></span><span id="rayDAlt"></span></div>
+</nav>

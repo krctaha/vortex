@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% block title %}{% if mode == "setup" %}VORTEX · Kurulum{% else %}VORTEX · Giriş{% endif %}{% endblock %}
+{% block body %}
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="auth-logo">{% include "_mark.html" %}</div>
+    <div class="auth-title">{% if mode == "setup" %}VORTEX kurulumu{% else %}VORTEX{% endif %}</div>
+    <div class="auth-sub">
+      {% if mode == "setup" %}İlk hesabı oluştur — bu hesap yönetici olur.{% else %}Kripto terminaline giriş yap{% endif %}
+    </div>
+
+    <form class="auth-form" id="authForm" autocomplete="on">
+      <div class="auth-error" id="authError" style="display:none"></div>
+      <div class="field">
+        <label class="field__label" for="username">Kullanıcı adı</label>
+        <input class="input" id="username" name="username" autocomplete="username" required
+               minlength="{% if mode == 'setup' %}3{% else %}2{% endif %}" placeholder="taha">
+      </div>
+      {% if mode == "setup" %}
+      <div class="field">
+        <label class="field__label" for="display_name">Görünen ad</label>
+        <input class="input" id="display_name" name="display_name" placeholder="Taha">
+      </div>
+      <div class="field">
+        <label class="field__label" for="email">E-posta</label>
+        <input class="input" id="email" name="email" type="email" placeholder="ornek@mail.com">
+      </div>
+      {% endif %}
+      <div class="field">
+        <label class="field__label" for="password">Şifre</label>
+        <input class="input" id="password" name="password" type="password" required
+               autocomplete="{% if mode == 'setup' %}new-password{% else %}current-password{% endif %}"
+               minlength="{% if mode == 'setup' %}8{% else %}1{% endif %}" placeholder="••••••••">
+      </div>
+      <button class="btn btn--primary" type="submit" id="submitBtn" style="height:40px;margin-top:4px">
+        {% if mode == "setup" %}Hesabı oluştur{% else %}Giriş yap{% endif %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+<script>
+(function () {
+  const mode = "{{ mode }}";
+  const form = document.getElementById("authForm");
+  const errBox = document.getElementById("authError");
+  const btn = document.getElementById("submitBtn");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errBox.style.display = "none";
+    btn.disabled = true;
+    const body = {
+      username: form.username.value.trim(),
+      password: form.password.value,
+    };
+    if (mode === "setup") {
+      body.display_name = form.display_name.value.trim();
+      body.email = form.email.value.trim();
+    }
+    try {
+      if (mode === "setup") {
+        await VX.post("/api/auth/register", body);
+        await VX.post("/api/auth/login", { username: body.username, password: body.password });
+      } else {
+        await VX.post("/api/auth/login", body);
+      }
+      window.location.href = "/";
+    } catch (err) {
+      errBox.textContent = err.message || "Giriş başarısız";
+      errBox.style.display = "block";
+      btn.disabled = false;
+    }
+  });
+})();
+</script>
+{% endblock %}

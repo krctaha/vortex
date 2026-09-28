@@ -1,0 +1,1066 @@
+{% extends "base.html" %}
+{% block title %}VORTEX · {{ page_title }}{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/workspace.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/workspace-live.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/portfoy.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/mentor.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/makro.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/chart-terminal.css?v={{ build_id }}">
+{% endblock %}
+{% block body %}
+<div class="app">
+  {% include "_ray.html" %}
+  <div class="icerik">
+  {% include "_ustbar.html" %}
+  <main class="main workspace" data-page="{{ page }}" data-bundle="workspace">
+    <header class="workspace__header">
+      {% if page == 'mentor' %}
+      {# KARŞILAMA — sayfanın kimliğini "VORTEX / KARAR DESTEĞİ" gibi bir
+         sistem etiketi yerine kullanıcıya dönük bir cümle veriyor.
+         Metin bilinçli olarak sakin: tasarım işlem açma dürtüsünü
+         artırmamalı. #}
+      <div class="msel">
+        <h1 class="msel__ad" id="mselAd">Merhaba</h1>
+        <p class="msel__alt">Bugün piyasayı değil, karar kaliteni yönet.
+          <span class="msel__ince">Fikrini savunma; önce çürütmeye çalış.</span></p>
+      </div>
+      {% else %}
+      <div>
+        <span class="workspace__eyebrow">VORTEX / {% if page == 'portfoy' %}HESAP{% elif page in ['markets','analiz','rsi','haber','takvim','makro'] %}PİYASALAR{% elif page in ['copy','motor','karne','test'] %}OPERASYON{% else %}SİSTEM{% endif %}</span>
+        <h1 class="workspace__title">{{ page_title }}</h1>
+        <p class="workspace__subtitle">
+          {% if page == 'portfoy' %}Binance hesabının canlı özeti: bakiye, açık pozisyonlar ve gerçek kaldıraç.
+          {% elif page == 'makro' %}Kripto dışı bağlam: endeksler, değerli madenler, dolar endeksi ve petrol.
+          {% elif page == 'markets' %}Likit coinleri fiyat, çoklu RSI, trend ve momentumla aynı tabloda karşılaştır.
+          {% elif page == 'analiz' %}Grafik, göstergeler ve metinli karar bağlamı tek çalışma alanında.
+          {% elif page == 'rsi' %}Likit kontratları yalnız RSI dağılımı, uç bölgeler ve RSI bağlamıyla tara.
+          {% elif page == 'haber' %}Piyasa hareketini açıklayabilecek güncel başlıklar.
+          {% elif page == 'takvim' %}Volatilite yaratabilecek yüksek etkili makro olaylar.
+          {% elif page == 'copy' %}Canlı ve kâğıt pozisyonları, koruyucu emirleri ve para riskini yönet.
+          {% elif page == 'motor' %}Tarama, eleme, rotasyon ve yürütme zincirinin gerçek durumu.
+          {% elif page == 'karne' %}Kapanmış işlemlerden gelen kanıt; açık kâr burada başarı sayılmaz.
+          {% elif page == 'test' %}Canlı motora dokunmayan altyapı ölçüm alanı.
+          {% else %}Hesap, bildirim ve sistem yapılandırması.
+          {% endif %}
+        </p>
+      </div>
+      {% endif %}
+      {# Durum/saat/avatar üst şeride taşındı; burada yalnızca sayfaya
+         özel özet kalıyor. #}
+      <div class="workspace__header-actions">
+      </div>
+    </header>
+
+    {% if page in ['markets','analiz','rsi','haber','takvim'] %}
+    <nav class="workspace-tabs" aria-label="Piyasa araçları">
+      <a class="{% if page == 'markets' %}is-active{% endif %}" href="/piyasalar">Piyasa Tarayıcı</a>
+      <a class="{% if page == 'analiz' %}is-active{% endif %}" href="/analiz">Grafik Analizi</a>
+      <a class="{% if page == 'rsi' %}is-active{% endif %}" href="/rsi-radar">RSI Radar</a>
+      <a class="{% if page == 'haber' %}is-active{% endif %}" href="/haberler">Gündem</a>
+      <a class="{% if page == 'takvim' %}is-active{% endif %}" href="/takvim">Makro Takvim</a>
+    </nav>
+    {% elif page in ['motor','karne','test'] %}
+    <nav class="workspace-tabs" aria-label="Operasyon araçları">
+      <a class="{% if page == 'motor' %}is-active{% endif %}" href="/motor">Motor</a>
+      <a class="{% if page == 'karne' %}is-active{% endif %}" href="/karne">Karne</a>
+      <a class="{% if page == 'test' %}is-active{% endif %}" href="/sistem-testi">Laboratuvar</a>
+    </nav>
+    {% endif %}
+
+    {% if page == 'makro' %}
+    <!-- =============================================================
+         MAKRO PANEL — kripto dışı bağlam.
+
+         NEDEN VAR: kripto tek başına bir dünya değil. Altın yükselirken,
+         dolar endeksi sertleşirken ya da Nasdaq düşerken BTC'nin
+         davranışı değişiyor.
+
+         BU SAYFA SİNYAL ÜRETMİYOR. Yalnızca veriyi gösteriyor; karar
+         motoru ayrıca yazılacak. Şimdiden karar mantığı karıştırmak,
+         motoru yazarken hangi kararın nereden geldiğini bulunamaz hale
+         getirirdi.
+
+         Binance bu ürünleri listelemiyor (USDⓈ-M'de ne endeks ne maden
+         var), o yüzden veri dışarıdan geliyor ve KAYNAĞI her satırda
+         yazıyor. Kaynak cevap vermezse satır "veri bekleniyor" der —
+         tahmini bir sayı asla gösterilmez.
+         ============================================================= -->
+    <div class="mkr">
+      <section class="tp">
+        <div class="tp__head">
+          <div class="tp__ad">Makro varlıklar</div>
+          <div class="tp__sag">
+            <span class="mkr__yas" id="mkrYas"></span>
+            <button class="btn btn--sm" type="button" id="mkrYenile">Yenile</button>
+          </div>
+        </div>
+        <div id="mkrIzgara" class="mkr__izgara">
+          <div class="empty">yükleniyor…</div>
+        </div>
+      </section>
+
+      <section class="tp">
+        <div class="tp__head">
+          <div class="tp__ad">Veri kaynağı</div>
+          <button class="btn btn--sm" type="button" id="mkrTeshis">Teşhis</button>
+        </div>
+        <div class="tp__body">
+          <div class="workspace__muted" style="font-size:11.5px;line-height:1.7">
+            İki ücretsiz kaynak sırayla deneniyor: <b>Yahoo Finance</b> (vadeli
+            kontratlar) ve <b>Stooq</b> (spot/endeks). İkisi de cevap vermezse
+            satır <b>veri bekleniyor</b> der; tahmini sayı gösterilmez.<br>
+            Değişim yüzdesinin tabanı kaynağa göre farklı: Yahoo önceki
+            <b>kapanışa</b>, Stooq günün <b>açılışına</b> göre hesaplıyor.
+            Hangisi kullanıldığı satırda yazıyor.
+          </div>
+          <div id="mkrTeshisKutu" class="mkr__teshis"></div>
+        </div>
+      </section>
+    </div>
+    {% endif %}
+
+    {% if page == 'portfoy' %}
+    <!-- =============================================================
+         PORTFÖY — BINANCE HESABININ CANLI ÖZETİ
+
+         Bu sayfanın var olma sebebi bir eksiklikti: bakiye verisi
+         sistemde ZATEN vardı ama yalnızca yönetici kilidi arkasında,
+         kapalı bir <details> içinde, bir kez çiziliyordu. Kullanıcı
+         "bakiyemi Binance'ten otomatik görsün" dediğinde aslında var
+         olan verinin ona hiç ulaşmadığını söylüyordu.
+
+         YERLEŞİM KARARI
+         Referans tasarımın gücü renk değil hiyerarşi: TEK bir büyük
+         sayı üstte, altında onu açan satırlar, sağda eylem/bağlam.
+         Göz önce "ne kadarım var" sorusunu cevaplıyor, sonra detaya
+         iniyor. Eski panellerde bu sıra yoktu — her kutu aynı ağırlıkta
+         bağırıyordu ve hiçbiri öne çıkmıyordu.
+         ============================================================= -->
+    <div class="pf">
+      <section class="pf__ana">
+        <!-- HERO: portföy değeri -->
+        <div class="pf-hero" id="pfHero">
+          <div class="pf-hero__ust">
+            <div>
+              <span class="pf-hero__etiket">Portföy değeri
+                <i class="pf-ipucu" title="Özkaynak = cüzdan bakiyesi + açık pozisyonların gerçekleşmemiş kâr/zararı. Cüzdan tek başına açık pozisyonları içermez.">?</i>
+              </span>
+              <div class="pf-hero__deger" id="pfOzkaynak">—</div>
+              <div class="pf-hero__alt" id="pfDegisim">Binance'e bağlanılıyor…</div>
+            </div>
+            <div class="pf-hero__sag">
+              <span class="pf-tazelik" id="pfTazelik"></span>
+              <button class="btn btn--sm" type="button" id="pfYenile">Yenile</button>
+            </div>
+          </div>
+          <div class="pf-hero__bar" id="pfBar" hidden>
+            <div class="pf-bar__dolu" id="pfBarDolu"></div>
+          </div>
+          <div class="pf-hero__bar-not" id="pfBarNot"></div>
+        </div>
+
+        <!-- ÖZET SATIRLARI -->
+        <div class="pf-kart">
+          <div class="pf-kart__head"><span>Hesap</span></div>
+          <div class="pf-satirlar" id="pfSatirlar"></div>
+        </div>
+
+        <!-- AÇIK POZİSYONLAR -->
+        <div class="pf-kart">
+          <div class="pf-kart__head">
+            <span>Açık pozisyonlar</span>
+            <b id="pfPozSayi" class="pf-rozet">—</b>
+          </div>
+          <div id="pfPozisyonlar"></div>
+        </div>
+      </section>
+
+      <aside class="pf__yan">
+        <!-- RİSK KUTUSU -->
+        <div class="pf-kart pf-kart--risk">
+          <div class="pf-kart__head"><span>Risk</span></div>
+          <div class="pf-risk" id="pfRisk"></div>
+        </div>
+
+        <!-- BAĞLANTI TEŞHİSİ
+             "Çekemiyorum" cümlesini bir sebebe ve bir yapılacak işe
+             çeviriyor. Bu uç zaten vardı ama arayüzde HİÇBİR YER onu
+             çağırmıyordu — yani teşhis yazıldı, kullanıcıya hiç
+             ulaşmadı. -->
+        <div class="pf-kart">
+          <div class="pf-kart__head">
+            <span>Binance bağlantısı</span>
+            <button class="btn btn--sm" type="button" id="pfTeshis">Teşhis</button>
+          </div>
+          <div class="pf-teshis" id="pfTeshisKutu">
+            <div class="workspace__muted">Bağlantı adım adım sınanır. Hiçbir emir gönderilmez, yalnızca okunur.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+    {% endif %}
+
+    {% if page == 'mentor' %}
+    <!-- =============================================================
+         TERMİNAL DÜZENİ (09.09)
+
+         Referans: Coinbase Prime. O tasarımın asıl gücü renkler değil,
+         YERLEŞİM: solda piyasa listesi, ortada ana iş, sağda pozisyonlar,
+         altta tam genişlik tablo — hepsi AYNI ANDA görünür ve hiçbiri
+         sayfa kaydırması gerektirmez. Bir terminalde en pahalı şey
+         kaydırmadır: bakmak istediğin iki sayı aynı ekranda değilse
+         onları kafanda tutmak zorunda kalırsın.
+
+         Bizde emir defteri yok, o yüzden üç sütun şöyle bölündü:
+           SOL   — Radar (evrenin nabzı, dar ve kaydırılabilir)
+           ORTA  — Bugün Ne Var (asıl iş, en geniş)
+           SAĞ   — Açık işlemler / Karne (sekmeli)
+         Altta araç şeridi ve durum çubuğu.
+
+         Her sütun KENDİ İÇİNDE kaydırılıyor; sayfanın kendisi sabit.
+         1180 pikselin altında bu düzen anlamını yitiriyor (sütunlar
+         okunamayacak kadar darlaşır), orada eski dikey akışa dönülüyor.
+         ============================================================= -->
+    <div class="tterm">
+    <!-- ÜST BANT — YEDİ EŞİT KUTU YERİNE BİR HİYERARŞİ.
+
+         Önceki hâlde yedi kutu yan yana, aynı boyda, aynı yazı
+         büyüklüğünde duruyordu. Yedi şey aynı anda bağırınca hiçbiri
+         duyulmuyor: göz nereye bakacağını bilemiyor ve hepsini tek tek
+         okumak zorunda kalıyor. Referans tasarımın yaptığı şey buydu —
+         TEK bir büyük sayı, geri kalanı ondan küçük.
+
+         BTC birinci çünkü diğer her şeyin bağlamı o: bir altcoinin
+         bir saatlik getirisinin büyük kısmı o coinle değil BTC'yle
+         ilgili. Sistem sayaçları (kontrat/senkron/açık) tek kutuya
+         indi — üçü de "sistem çalışıyor mu" sorusunun parçası, ayrı
+         ayrı kutu hak etmiyorlar. -->
+    <div class="mhero">
+      <div class="mhero__ana" id="kpiBtc">
+        <span><span class="mhero__ikon"><img src="/icon/BTCUSDT" alt="" width="15" height="15" loading="lazy" decoding="async"></span>BTC / USDT</span>
+        <b>—</b>
+        <i>24s —</i>
+      </div>
+      <div class="mhero__ana mhero__ana--ik" id="kpiEth">
+        <span><span class="mhero__ikon"><img src="/icon/ETHUSDT" alt="" width="15" height="15" loading="lazy" decoding="async"></span>ETH / USDT</span>
+        <b>—</b>
+        <i>24s —</i>
+      </div>
+      <!-- BTC REJİMİ: akıntı ölçümü, tahmin değil. Akıntıya karşı
+           yüzmek yasak değil; farkında olmadan yüzmek pahalı. -->
+      <div class="mstat mstat--rejim" id="kpiRejim">
+        <span><span class="mhero__ikon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M3 17l5-6 4 4 5-8 4 5"/></svg></span>BTC rejimi</span>
+        <b>—</b>
+        <i class="rejnot">akıntı ölçümü</i>
+      </div>
+      <!-- LONG/SHORT: HESAP sayısı oranı, pozisyon büyüklüğü değil.
+           Bin küçük hesap long, on dev hesap short olabilir. -->
+      <div class="mstat mstat--ls" id="kpiLs">
+        <span><span class="mhero__ikon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><path d="M12 5v14M7 10l5-5 5 5M7 14l5 5 5-5"/></svg></span>Long / Short</span>
+        <b>—</b>
+        <div class="lsbar"><i style="width:50%"></i></div>
+        <i class="lsnot">hesap dağılımı</i>
+      </div>
+      <div class="mstat mstat--sis">
+        <span><span class="mhero__ikon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="13" height="13"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h6v6H9z"/></svg></span>Sistem</span>
+        <b id="stripEvren">—</b>
+        <i>kontrat izleniyor</i>
+        <div class="mstat__alt">
+          <span>senkron <b id="stripSenkron">—</b></span>
+          <span>açık <b id="stripAcik">—</b></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Otomatik kayıt çalışmıyorsa BURADA söylenir, en altta değil.
+         Günlük artık kendiliğinden dolduğuna göre, dolmadığı an
+         kullanıcının bunu HEMEN görmesi gerekiyor: yoksa boş günlüğü
+         "demek ki işlem yapmamışım" diye okur. -->
+
+    <!-- Otomatik kayıt çalışmıyorsa BURADA söylenir, en altta değil. -->
+    <div id="gunlukBinance" hidden></div>
+
+      <div class="tterm__grid">
+
+        <!-- ORTA — BUGÜN NE VAR. Sayfanın asıl işi, en geniş sütun. -->
+        <section class="tp tp--orta" id="planPanel">
+          <div class="tp__head">
+            <div class="tp__ad">Bugün Ne Var</div>
+            <div class="tp__sag">
+              <button type="button" class="ipucu" id="rNedir">R nedir?</button>
+              <span class="canli"><i></i><b id="planZaman">—</b></span>
+              <button class="btn btn--sm" id="planBtn" type="button" title="Önbelleği atla, şimdi tara">Şimdi tara</button>
+            </div>
+          </div>
+          <div class="tp__body">
+            <div class="r-aciklama" id="rAciklama" hidden>
+              <b>R = bu işlemde riske ettiğin miktar.</b> Girişinle stopun arasındaki mesafe.
+              Stop yersen <b>−1R</b> kaybedersin; kaç dolar olduğu Ayarlar &rsaquo; Risk'teki
+              işlem başı riskin (<span id="rDolar">—</span>) kadardır.<br>
+              Hedefler de aynı birimde yazılır: <b>2R</b>, riskinin iki katı demek. Fiyat rakamı
+              coinden coine değişir, R değişmez; farklı işlemleri ancak R ile karşılaştırabilirsin.<br>
+              <i>Karnendeki bütün istatistikler bu birimle hesaplanıyor — ve stop <b>dondurulur</b>:
+              sonradan taşısan bile R hep ilk stopa göre.</i>
+            </div>
+            <div id="planListe"><div class="empty">taranıyor…</div></div>
+          </div>
+        </section>
+
+        <section class="tp tp--orta premium-mentor-panel" id="premiumMentorPanel">
+          <div class="tp__head">
+            <div><div class="tp__ad">SMC / ICT Avcı <span class="tag tag--info">PAPER</span></div><div class="workspace__muted">4 saat yön → likidite → displacement/MSS → CISD + IFVG/FVG</div></div>
+            <button class="btn btn--sm" id="premiumMentorScanBtn" type="button">Şimdi tara</button>
+          </div>
+          <div class="tp__body">
+            <div class="workspace__muted" id="premiumMentorMeta">SMC/ICT taraması bekliyor…</div>
+            <div id="premiumMentorList"><div class="empty">Henüz piyasa yapısı adayı taranmadı.</div></div>
+          </div>
+        </section>
+
+        <!-- SAĞ RAF — açık işlemler/karne + radar, alt alta. -->
+        <div class="tterm__raf">
+        <aside class="tp tp--sag">
+          <div class="tp__head">
+            <div class="seg" id="sagSeg" role="tablist">
+              <button class="is-active" type="button" data-sag="acik">AÇIK İŞLEM <i class="tag" id="gunlukOpenCount">0</i></button>
+              <button type="button" data-sag="karne">KARNE</button>
+            </div>
+          </div>
+          <div class="tp__body">
+            <div data-sagpane="acik">
+              <section class="panel gunluk-gate" id="gunlukKapi" hidden></section>
+              <div class="workspace__muted" style="margin-bottom:8px">
+                Giriş, stop, miktar ve kaldıraç <b>borsadan</b> okunur — 90 saniyede bir.
+              </div>
+              <div class="evidence" id="senkronDurum" style="margin-bottom:9px">—</div>
+              <div id="gunlukOpen"><div class="empty">yükleniyor…</div></div>
+            </div>
+            <div data-sagpane="karne" hidden>
+              <div class="workspace__muted" style="margin-bottom:8px">
+                Yeterli örnek olmadan hiçbir sayı bulgu diye sunulmaz.
+                <span class="evidence" id="gunlukKarneMeta">—</span>
+              </div>
+              <div id="gunlukOgutler"></div>
+              <div id="gunlukKarne"><div class="empty">yükleniyor…</div></div>
+            </div>
+          </div>
+        </aside>
+
+        <!-- RADAR — evrenin nabzı: ~500 kontrat tek çağrıyla izleniyor,
+             sıralama mutlak hacme göre değil her sembolün KENDİ
+             normaline göre. Sağ rafta, çünkü asıl iş ortadaki tablo;
+             radar ona bakarken göz ucuyla izlenen şey. -->
+        <section class="tp tp--radar" id="radarPanel">
+          <div class="tp__head">
+            <div class="tp__ad">Radar <span class="tag" id="radarSayi">—</span></div>
+            <button class="btn btn--sm btn--icon" id="radarYenile" type="button" title="Yenile">⟳</button>
+          </div>
+          <div class="tp__seg">
+            <div class="seg seg--blok" id="radarSirala" role="tablist">
+              <button class="is-active" type="button" data-sirala="ilgi">İLGİ</button>
+              <button type="button" data-sirala="hacim_orani">HACİM ×</button>
+              <button type="button" data-sirala="ivme">1S</button>
+              <button type="button" data-sirala="degisim">24S</button>
+            </div>
+          </div>
+          <div class="tp__body"><div id="radarListe"><div class="empty">yükleniyor…</div></div></div>
+        </section>
+        </div>
+      </div>
+
+    <!-- =============================================================
+         VERİ ŞERİDİ — plan tablosunun altındaki boşluk.
+
+         Plan listesi kısa olduğunda sayfanın yarısı boş kalıyordu.
+         Boşluk kendi başına kötü değil; ama burada gösterilmeyi hak
+         eden GERÇEK veri varken boş durması israftı. Üçü de mevcut
+         uçlardan besleniyor, yeni veri kaynağı yok:
+           karne  -> /api/mentor/gunluk/durum
+           işlem  -> /api/mentor/gunluk/gecmis
+           lider  -> /api/mentor/kutuphane
+         ============================================================= -->
+    <div class="vser">
+      <section class="tp vser__ana">
+        <div class="tp__head">
+          <div class="tp__ad">Son kapanan işlemler</div>
+          <a class="btn btn--sm" href="/karne">Karne ↗</a>
+        </div>
+        <!-- Karne başlığı: sayı değil KANIT. Yetersiz örnekte tamamı
+             soluklaşıyor — az veriden çıkarım yapmayı görsel olarak da
+             caydırmak için. -->
+        <div class="vser__stat" id="vserKarne"></div>
+        <div class="tp__body" style="padding-top:0">
+          <div id="vserGecmis"><div class="empty">yükleniyor…</div></div>
+        </div>
+      </section>
+
+      <section class="tp vser__yan">
+        <div class="tp__head">
+          <div class="tp__ad">Piyasa liderleri</div>
+          <div class="seg" id="vserLiderSeg" role="tablist">
+            <button class="is-active" type="button" data-lider="artan">ARTAN</button>
+            <button type="button" data-lider="azalan">AZALAN</button>
+          </div>
+        </div>
+        <div class="tp__body"><div id="vserLider"><div class="empty">yükleniyor…</div></div></div>
+      </section>
+    </div>
+
+    <div class="aracbar" id="aracGrid">
+      <button class="aracbar__c" type="button" data-arac="gozlem" data-renk="a"
+              title="Sen sormadan, saatlik taramada dikkate değer bulduğu kurulumlar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.6-3.6"/></svg>
+        <b>Gözlemler</b><i class="aracbar__r" id="aracRozetGozlem">—</i>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="fikir" data-renk="b"
+              title="Aklında bir işlem varsa masaya yatır — sistem çürütmeye çalışır">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 21h4"/><path d="M12 3a6 6 0 0 0-3.5 10.9c.5.4.8 1 .9 1.6h5.2c.1-.6.4-1.2.9-1.6A6 6 0 0 0 12 3z"/></svg>
+        <b>Fikrimi sorgula</b>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="gecmis" data-renk="c"
+              title="Gerekçen, o anki bağlam ve sonuç yan yana">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v4h4"/><path d="M12 7v5l3 2"/></svg>
+        <b>Geçmiş</b><i class="aracbar__r" id="aracRozetGecmis">—</i>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="kirilim" data-renk="d"
+              title="Etiket, yön, sembol ve saate göre — az örnekli hücreler soluk">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20h-20"/></svg>
+        <b>Kırılımlar</b>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="ictihal" data-renk="e"
+              title="Karne bugünden değil, gerçek geçmişinden başlasın">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v11"/><path d="M8 10l4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+        <b>Geçmişi aktar</b>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="degerlendirme" data-renk="f"
+              title="Ne düşündüğünü ve sistemin o anda ne söylediğini unutma">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-4 4V5a2 2 0 0 1 2-2h13a2 2 0 0 1 2 2z"/></svg>
+        <b>Değerlendirmeler</b><i class="aracbar__r" id="aracRozetDeger">—</i>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="baglanti" data-renk="h"
+              title="Binance bağlantısı hangi adımda kırılıyor — teşhis">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 15l6-6"/><path d="M11 6l1-1a4 4 0 1 1 6 6l-1 1"/><path d="M13 18l-1 1a4 4 0 1 1-6-6l1-1"/></svg>
+        <b>Bağlantı teşhisi</b><i class="aracbar__r" id="aracRozetBag">—</i>
+      </button>
+      <button class="aracbar__c" type="button" data-arac="elle" data-renk="g"
+              title="Yedek yol — Binance anahtarı bağlıyken buna gerek yok">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h8"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+        <b>Elle kayıt</b>
+      </button>
+    </div>
+
+    <div class="arac-govde" id="aracGovde">
+        <!-- SISTEMIN GOZLEMLERI -->
+        <div class="arac-pane" data-pane="gozlem" hidden>
+          <div class="arac-pane__ust">
+            <span class="evidence" id="taramaDurum">—</span>
+            <button class="btn btn--sm" id="taramaSimdiBtn" type="button">Şimdi tara</button>
+          </div>
+          <div id="taramaGozlemler"><div class="empty">yükleniyor…</div></div>
+        </div>
+
+        <!-- KENDI FIKRIMI SORGULA -->
+        <div class="arac-pane" data-pane="fikir" hidden>
+          <form id="mentorForm" class="mentor-query__grid">
+            <div class="field mentor-query__symbol"><label class="field__label">Coin</label><input class="input" id="mentorSymbol" name="symbol" list="mentorSymbolList" value="BTCUSDT" autocomplete="off"><datalist id="mentorSymbolList"></datalist></div>
+            <div class="field"><label class="field__label">Zaman</label><select class="input" name="interval" id="mentorInterval"><option>5m</option><option selected>15m</option><option>1h</option><option>4h</option><option>1d</option></select></div>
+            <div class="field"><label class="field__label">Düşündüğün yön</label><select class="input" name="direction" id="mentorDirection"><option value="IZLE">İzle / fikrim yok</option><option value="LONG">LONG düşünüyorum</option><option value="SHORT">SHORT düşünüyorum</option></select></div>
+            <div class="field"><label class="field__label">Planlanan giriş</label><input class="input" name="entry" id="mentorEntry" type="number" min="0" step="any" placeholder="Boşsa anlık fiyat"></div>
+            <div class="field"><label class="field__label">Geçersizlik / stop</label><input class="input" name="stop" id="mentorStop" type="number" min="0" step="any" placeholder="Boşsa sistem önerir"></div>
+            <button class="btn btn--primary mentor-query__submit" id="mentorReviewBtn" type="submit">Planımı sorgula</button>
+          </form>
+          <div class="mentor-result" id="mentorResult"></div>
+        </div>
+
+        <!-- GECMIS ISLEMLER -->
+        <div class="arac-pane" data-pane="gecmis" hidden><div id="gunlukGecmis"></div></div>
+
+        <!-- KIRILIMLAR -->
+        <div class="arac-pane" data-pane="kirilim" hidden><div id="gunlukKirilim"></div></div>
+
+        <!-- BINANCE GECMISI ICERI AKTAR -->
+        <div class="arac-pane" data-pane="ictihal" hidden>
+          <div class="workspace__muted" style="margin-bottom:10px">
+            Binance geçmişinde <b>stop seviyesi yok</b>. Stopsuz R hesaplanamaz, o yüzden bu işlemlerde R boş kalır ve
+            <b>R tabanlı hiçbir istatistiğe girmez</b> (SQN, bootstrap, R ortalaması). Dolar sonucu, süre, sembol, yön ve
+            saat kırılımları tam çalışır. Eksik veriyi tahminle doldurmak ölçümü kirletirdi.
+          </div>
+          <div class="arac-pane__ust">
+            <div class="field" style="max-width:150px"><label class="field__label">Kaç gün geriye</label>
+              <input class="input input--xs" id="ictGun" type="number" min="1" max="180" value="30" inputmode="numeric"></div>
+            <button class="btn btn--sm" id="ictBakBtn" type="button">Getir</button>
+            <button class="btn btn--sm btn--primary" id="ictAktarBtn" type="button" disabled>Seçilenleri aktar</button>
+            <span class="workspace__muted" id="ictOzet"></span>
+          </div>
+          <div id="ictListe"><div class="empty">Getir'e bas</div></div>
+        </div>
+
+        <!-- SON DEGERLENDIRMELER -->
+        <div class="arac-pane" data-pane="degerlendirme" hidden>
+          <div id="mentorRecent"><div class="empty">Henüz değerlendirme yok</div></div>
+        </div>
+
+        <!-- ELLE KAYIT — YEDEK YOL -->
+        <div class="arac-pane" data-pane="elle" hidden>
+          <div class="workspace__muted" style="margin-bottom:12px">
+            Binance API anahtarın bağlıysa bu formu kullanma: açtığın işlem <b>90 saniye içinde</b> kendiliğinden
+            <b>Açık İşlemlerin</b> listesine düşer, giriş ve stop borsadan okunur. Elle yazılan bir giriş fiyatı
+            yanlış olursa <b>bütün R hesabı</b> bozulur.
+          </div>
+          <form id="gunlukForm" class="workspace__form-grid">
+            <div class="field"><label class="field__label">Sembol</label><input class="input" name="symbol" placeholder="BTCUSDT" required autocapitalize="characters" spellcheck="false"></div>
+            <div class="field"><label class="field__label">Yön</label><select class="input" name="side"><option value="LONG">LONG</option><option value="SHORT">SHORT</option></select></div>
+            <div class="field"><label class="field__label">Giriş</label><input class="input" name="entry" type="number" step="any" inputmode="decimal" required></div>
+            <div class="field"><label class="field__label">Stop</label><input class="input" name="initial_stop" type="number" step="any" inputmode="decimal" required>
+              <div class="workspace__muted">Bu stop <b>dondurulur</b>. Sonradan taşısan bile R hep buna göre hesaplanır.</div></div>
+            <div class="field"><label class="field__label">Hedef</label><input class="input" name="initial_target" type="number" step="any" inputmode="decimal"></div>
+            <div class="field"><label class="field__label">Miktar (coin)</label><input class="input" name="qty" type="number" step="any" inputmode="decimal"></div>
+            <div class="field"><label class="field__label">Kaldıraç</label><input class="input" name="leverage" type="number" min="1" max="125" inputmode="numeric"></div>
+            <div class="field"><label class="field__label">Kurulum etiketi</label><input class="input" name="etiket" list="gunlukEtiketler" placeholder="rsi-asiri, kirilim...">
+              <datalist id="gunlukEtiketler"><option>rsi-asiri</option><option>kirilim</option><option>funding</option><option>trend-devam</option><option>tepki</option><option>haber</option></datalist></div>
+            <div class="field workspace__span-2"><label class="field__label">Neden giriyorsun? (tek satır)</label><input class="input" name="gerekce" maxlength="400" placeholder="RSI 82 ve funding aşırı pozitif, tepki bekliyorum"></div>
+            <div class="workspace__span-2">
+              <div class="workspace__muted" style="margin-bottom:6px">Girişten önce kontrol — <b>biri bile işaretsizse</b> işlem "kural dışı" kaydedilir. Sert olması kasıtlı.</div>
+              <div id="gunlukKontrol" class="workspace__check-grid"></div>
+            </div>
+            <div class="workspace__span-2" style="display:flex;gap:9px;justify-content:flex-end;align-items:center">
+              <span class="workspace__muted" id="gunlukFormState"></span>
+              <button class="btn btn--primary" type="submit">Kaydet</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- BAGLANTI TESHISI — "cekemiyorum" cumlesini bir sebebe cevirir. -->
+        <div class="arac-pane" data-pane="baglanti" hidden>
+          <div class="workspace__muted" style="margin-bottom:10px">
+            Her adım ayrı ayrı deneniyor ve <b>ilk kırılan yer</b> işaretleniyor.
+            Hiçbir emir gönderilmez, yalnızca okunur.
+          </div>
+          <div class="arac-pane__ust">
+            <button class="btn btn--sm btn--primary" id="teshisBtn" type="button">Teşhis çalıştır</button>
+            <span class="workspace__muted" id="teshisOzet"></span>
+          </div>
+          <div id="teshisListe"><div class="empty">Teşhis çalıştır'a bas</div></div>
+        </div>
+      </div>
+
+    <!-- BUGÜN NE VAR — TAM GENİŞLİK TABLO.
+         Kullanıcı radar tablosunu beğendi ve haklıydı: başlıklı, hizalı,
+         yoğun bir tablo bir kart listesinden çok daha hızlı okunuyor.
+         Plan listesi artık aynı görsel dilde ve tam genişlikte —
+         dar sütunda on iki sütunluk bir tablo sıkışırdı. -->
+
+      <!-- DURUM ÇUBUĞU — Prime'daki "OPERATIONAL" satırının karşılığı.
+           Terminalin kendi sağlığı: veri modu, izlenen kontrat, son
+           tarama, borsa senkronu. Bir şey durduysa burada görünür. -->
+      <div class="tbar">
+        <span class="tbar__d"></span>
+        <span>VORTEX <b>{{ build_id[:14] }}</b></span>
+        <span>izlenen <b id="stripEvren2">—</b></span>
+        <span>senkron <b id="stripSenkron2">—</b></span>
+        <span class="tbar__son">Emir yetkisi yok · karar sende</span>
+      </div>
+    </div>
+    {% elif page == 'markets' %}
+    <section class="market-screener panel">
+      <div class="market-screener__top">
+        <div>
+          <div class="panel__title">Cryptocurrency Screener <span class="tag tag--info">Binance Futures</span></div>
+          <div class="workspace__muted" id="marketScreenerMeta">Likit evren hazırlanıyor…</div>
+        </div>
+        <div class="panel__actions">
+          <label class="market-screener__search"><span>Ara</span><input class="input" id="marketScreenerSearch" type="search" placeholder="BTC, ETH, SOL…" autocomplete="off"></label>
+          <button class="btn" id="marketScreenerRefresh" type="button">Yenile</button>
+        </div>
+      </div>
+      <div class="market-screener__views" id="marketScreenerViews" role="tablist" aria-label="Tarayıcı görünümü">
+        <button class="is-active" type="button" data-market-view="trend">TREND</button>
+        <button type="button" data-market-view="rsi">RSI</button>
+        <button type="button" data-market-view="macd">MACD</button>
+        <button type="button" data-market-view="ema">EMA</button>
+        <button type="button" data-market-view="derivatives">TÜREVLER</button>
+        <button type="button" data-market-view="day">DAY TRADE</button>
+        <button type="button" data-market-view="long">LONG TERM</button>
+        <span class="market-screener__view-spacer"></span>
+        <button class="is-active" type="button" data-market-filter="all">HEPSİ</button>
+        <button type="button" data-market-filter="high">YÜKSEK HACİM</button>
+        <button type="button" data-market-filter="medium">ORTA HACİM</button>
+        <button type="button" data-market-filter="emerging">GELİŞEN HACİM</button>
+        <button type="button" data-market-filter="new">YENİLER</button>
+        <button type="button" data-market-filter="up">YÜKSELENLER</button>
+        <button type="button" data-market-filter="down">DÜŞENLER</button>
+      </div>
+      <div class="market-screener__summary" id="marketScreenerSummary"></div>
+      <div class="market-screener__table" id="marketScreenerTable"><div class="empty">Piyasa verisi yükleniyor…</div></div>
+    </section>
+    <section class="market-lifecycle panel workspace__section">
+      <div class="panel__head">
+        <div><div class="panel__title">Futures Listeleme Takvimi <span class="tag tag--info">Resmî sözleşme verisi</span></div><div class="workspace__muted" id="marketLifecycleMeta">Binance Futures sözleşmeleri kontrol ediliyor…</div></div>
+      </div>
+      <div class="market-lifecycle__grid" id="marketLifecycleGrid"><div class="empty">Listeleme takvimi yükleniyor…</div></div>
+    </section>
+    <section class="panel workspace__section market-screener__note"><b>Bu tablo sinyal değildir.</b> RSI aşırı bölgeyi, trend ve MACD ise bağlamı gösterir. TÜREVLER görünümünde funding baz puanla, OI ise son 24 saatteki açık pozisyon değeri değişimiyle gösterilir; fiyat/OI bağlamı tek başına işlem gerekçesi değildir. Satırdaki <b>Analiz yap</b> düğmesi coin için mum grafik, göstergeler, formasyonlar ve metinli analiz ekranını açar.</section>
+    {% elif page == 'analiz' %}
+    <div class="chart-terminal">
+    <div class="chart-toolbar" role="toolbar" aria-label="Grafik araçları"><div class="chart-toolbar-scroll">
+      <input class="input" id="symbolInput" aria-label="Grafik sembolü" list="symbolList" value="BTCUSDT" autocomplete="off"><datalist id="symbolList"></datalist>
+      <select class="input" id="intervalInput" aria-label="Zaman dilimi"><option value="5m">5 dk</option><option value="15m" selected>15 dk</option><option value="1h">1 sa</option><option value="4h">4 sa</option><option value="1d">1 gün</option></select>
+      <div class="chart-timeframes" aria-label="Hızlı zaman dilimi">{% for value,label in [('5m','5dk'),('15m','15dk'),('1h','1sa'),('4h','4sa'),('1d','G')] %}<button type="button" data-chart-interval="{{ value }}" aria-pressed="{{ 'true' if value=='15m' else 'false' }}">{{ label }}</button>{% endfor %}</div>
+      <span class="chart-toolbar-divider"></span><button type="button" id="indicatorMenuBtn">Göstergeler</button><button type="button" id="analyzeBtn">Yenile</button><button type="button" id="shareAnalysis">Paylaş ↗</button><button type="button" id="chartFullscreenBtn" aria-label="Grafiği tam ekran aç">⛶</button>
+    </div><button type="button" id="chartSidebarToggle" aria-label="Piyasa ve analiz panelini aç/kapat" aria-controls="chartSidebar" aria-expanded="true">☷</button></div>
+    <div class="workspace__indicator-menu" id="indicatorMenu" hidden><input class="input" id="indicatorSearch" type="search" placeholder="RSI, MACD, VWAP veya CVD ara…" autocomplete="off"><button class="btn btn--sm" id="resetIndicatorsBtn" type="button">Varsayılan göstergeler</button><div class="workspace__indicator-toggles" id="indicatorToggles"></div></div>
+    <div class="chart-layout">
+      <nav class="chart-tools" aria-label="Grafik görünüm araçları"><button id="chartCursorBtn" type="button" aria-label="Artı imleci aç/kapat" aria-pressed="true" title="Artı imleç">＋</button><button id="chartFitBtn" type="button" aria-label="Grafiği ekrana sığdır" title="Ekrana sığdır">↔</button><button id="chartZoomInBtn" type="button" aria-label="Grafiği yakınlaştır" title="Yakınlaştır">⊕</button><button id="chartZoomOutBtn" type="button" aria-label="Grafiği uzaklaştır" title="Uzaklaştır">⊖</button></nav>
+      <section class="chart-main workspace__chart-panel"><div class="chart-symbol-head"><div><div class="panel__title" id="analysisTitle">BTCUSDT</div><div class="workspace__live-row"><b id="analysisLivePrice">—</b><span id="analysisBidAsk">Binance WebSocket bekleniyor</span></div></div><div class="panel__actions"><span class="evidence" id="analysisMeta">—</span><button class="btn btn--sm" id="chartScreenshotBtn" type="button" disabled>SS kopyala</button></div></div>
+        <div class="workspace__active-indicators" id="activeIndicators"></div>
+        <div class="workspace__warning" id="analysisLoadState" role="status" aria-live="polite"><span id="analysisLoadText">Grafik hazırlanıyor…</span> <button class="btn btn--sm" id="analysisRetry" type="button" hidden>Yeniden dene</button></div>
+        <div class="chart-box workspace__chart" id="analysisChart"></div><div class="workspace__indicator-panes" id="indicatorPanes"></div><div class="workspace__legend" id="analysisLegend"></div>
+      </section>
+      <aside id="chartSidebar" class="chart-sidebar" aria-label="Piyasa listesi ve analiz">
+    <section class="chart-watch"><div class="panel__head"><div class="panel__title">Piyasa listesi</div><span class="workspace__muted">USDT perp.</span></div><input class="input" id="chartWatchSearch" aria-label="Piyasa listesinde ara" placeholder="Sembol ara…"><div class="chart-watch-titles"><span>Sembol</span><span>Son</span><span>24s %</span></div><div id="chartWatchRows"><div class="empty">Piyasalar yükleniyor…</div></div></section>
+    <section class="panel workspace__section smc-panel" id="smcAnalysisPanel">
+      <details class="chart-share"><summary>Grafik ve verileri dışa aktar</summary><div class="panel__actions"><button class="btn" id="downloadChart" type="button">Grafiği indir</button><button class="btn" id="copyAnalysisData" type="button">Verileri kopyala</button><button class="btn" id="composeX" type="button">X gönderisi hazırla</button></div></details>
+      <div class="panel__head">
+        <div><div class="panel__title">SMC / ICT Karar Akışı <span class="tag tag--info">PAPER</span></div><div class="workspace__muted">Likidite süpürmesi ardından MSS+FVG veya IFVG+CISD koşullarını izler.</div></div>
+        <span class="tag" id="smcPhase">bekliyor</span>
+      </div>
+      <div class="smc-flow" id="smcFlow"><div class="empty">Analiz çalıştırıldığında 4 saatlik yön ile 15 dakikalık giriş sırası burada görünür.</div></div>
+    </section>
+    <details class="chart-info"><summary>Özet göstergeler</summary><section class="workspace__kpis" id="analysisKpis"></section></details>
+    <details class="chart-info"><summary>Detaylı analiz</summary><div class="workspace__analysis-copy"><div class="panel__head"><button class="btn btn--send" id="sendAnalysisBtn" disabled>Gruba gönder</button></div><div id="analysisNarrative" class="workspace__narrative"><div class="empty">Analiz bekleniyor</div></div><details class="workspace__raw-details"><summary>Ham teknik bulguları aç</summary><div id="analysisSummary" class="workspace__summary"><div class="empty">Analiz bekleniyor</div></div></details></div></details>
+    <details class="workspace-disclosure workspace__section"><summary><span><b>Derin analiz araçları</b><small>Order flow, işlem senaryosu, gösterge yorumu ve uzun metin</small></span><span>Gerektiğinde aç</span></summary><div class="workspace-disclosure__body">
+    <section class="panel workspace__x-post"><div class="panel__head"><div><div class="panel__title">X İçin Uzun Analiz Metni</div><div class="workspace__muted">Yapı, momentum, order flow, likidite, destek/direnç ve türev bağlamından otomatik üretilir.</div></div><div class="panel__actions"><span class="evidence" id="xPostCount">0 karakter</span><button class="btn btn--send" id="copyXAnalysisBtn" type="button" disabled>Metni kopyala</button></div></div><textarea class="input workspace__x-text" id="xAnalysisText" rows="16" readonly placeholder="Önce analiz çalıştır…"></textarea></section>
+    <section class="panel workspace__section workspace__flow" id="orderFlowWrap"><div class="panel__head"><div><div class="panel__title">Order Flow · Agresif Alış/Satış</div><div class="workspace__muted">Mum delta yüzdesi, CVD ve Binance Futures açık 1 dakikalık taker hacmi.</div></div><div class="workspace__flow-live"><span id="flowLiveDelta">Delta —</span><span id="flowLiveRatio">Alış —</span></div></div><div class="workspace__flow-chart" id="orderFlowChart"></div></section>
+    <section class="panel workspace__section"><div class="panel__head"><div><div class="panel__title">5 TP · 1 SL Senaryosu</div><div class="workspace__muted">ATR tabanlı kâğıt plandır; motor filtresi geçilmeden işlem sinyali sayılmaz.</div></div><span class="tag" id="planScore">—</span></div><div id="tradePlan" class="workspace__plan"><div class="empty">Analiz bekleniyor</div></div></section>
+    <section class="panel workspace__section"><div class="panel__head"><div class="panel__title">Seçili Göstergelerin Yorumu</div></div><div id="indicatorReadout" class="workspace__readout"></div></section>
+    </div></details>
+      </aside>
+    </div></div>
+    {% elif page == 'rsi' %}
+    <section class="panel workspace__toolbar rsi-toolbar"><div class="field"><label class="field__label">Radar zaman dilimi</label><select class="input" id="rsiInterval"><option>15m</option><option selected>1h</option><option>4h</option><option>1d</option></select></div><button class="btn btn--primary workspace__action" id="scanRsiBtn">Radarı yenile</button><span class="chip" id="rsiAverage">Ortalama —</span><span class="rsi-toolbar__note">RSI momentumun hızını ölçer; tek başına alım veya satım emri değildir.</span></section>
+    <section class="workspace__kpis rsi-kpis" id="rsiKpis"></section>
+
+    <section class="rsi-focus-grid workspace__section" aria-label="RSI uçları">
+      <div class="panel rsi-focus-panel rsi-focus-panel--positions">
+        <div class="panel__head"><div><div class="panel__title">En Düşük RSI</div><div class="workspace__muted">Seçili zaman diliminde momentumu en zayıf 12 likit kontrat.</div></div><span class="tag tag--long" id="oversoldCount">≤30: 0</span></div>
+        <div id="lowestList"><div class="empty">Radar taraması bekleniyor…</div></div>
+      </div>
+      <div class="panel rsi-focus-panel rsi-focus-panel--watch">
+        <div class="panel__head"><div><div class="panel__title">En Yüksek RSI</div><div class="workspace__muted">Seçili zaman diliminde momentumu en güçlü 12 likit kontrat.</div></div><span class="tag tag--short" id="overboughtCount">≥70: 0</span></div>
+        <div id="highestList"><div class="empty">Radar taraması bekleniyor…</div></div>
+      </div>
+    </section>
+
+    {# Çıplak RSI yön değildir. Bu panel yalnızca RSI uçlarının bağlamını
+       ve sınıflandırıcının kendi isabet karnesini gösterir. #}
+    <section class="panel workspace__section rsi-context" id="rsiContextPanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Aşırı Bölge · Ne Bekliyoruz <span class="tag tag--warn">hipotez</span></div>
+          <div class="workspace__muted">RSI 80 tek başına "düşecek" demek değildir — güçlü bir trendde tam tersini söyler. Beş ayırt edici: <b>rejim</b> (momentum), <b>uyumsuzluk</b>, <b>kalıcılık</b>, <b>gerilme</b>, <b>fonlama</b>. Rozet <b>beklenen fiyat yönünü</b> söyler: ▲ yükseliş, ▼ düşüş. Aşırı satımda "düşüş sürebilir" de çıkabilir — trend aşağıysa aşırı satım zayıflık işaretidir, alım işareti değil.</div>
+        </div>
+        <div class="panel__actions"><span class="evidence" id="rsiCtxMeta">—</span></div>
+      </div>
+      <div id="rsiContextBody"><div class="empty">Tarama bekleniyor</div></div>
+    </section>
+
+    <details class="workspace-disclosure workspace__section rsi-market-detail"><summary><span><b>RSI piyasa dağılımı</b><small>80 likit kontratın RSI bölge dağılımı</small></span><span>Detayı aç</span></summary><div class="workspace-disclosure__body">
+      <section class="panel"><div class="panel__head"><div><div class="panel__title">RSI Dağılımı</div><div class="workspace__muted">Boş kategori hata değildir; eşik geçen kontrat olmadığı anlamına gelir.</div></div><span class="evidence" id="rsiCount">—</span></div><div id="rsiDistribution" class="workspace__distribution"></div></section>
+    </div></details>
+    {% elif page == 'haber' %}
+    <section class="panel"><div class="panel__head"><div><div class="panel__title">Canlı Gündem</div><div class="workspace__muted" id="newsMeta">Kaynaklar yükleniyor</div></div><div class="panel__actions"><button class="btn" id="refreshNewsBtn">Yenile</button><button class="btn btn--send" id="sendNewsPageBtn">Gruba gönder</button></div></div><div id="newsPageList" class="workspace__feed"></div></section>
+    {% elif page == 'takvim' %}
+    <section class="panel"><div class="panel__head"><div><div class="panel__title">Ekonomik Haber Takvimi</div><div class="workspace__muted">Yüksek etkili olaylar önceliklidir</div></div><div class="panel__actions"><button class="btn" id="refreshCalendarBtn">Yenile</button><button class="btn btn--send" id="sendCalendarPageBtn">Gruba gönder</button></div></div><div id="calendarPageList"></div></section>
+    {% elif page == 'copy' %}
+    <div class="workspace__warning" id="copyModeWarning"><b>DURUM KONTROL EDİLİYOR:</b> Canlı emir anahtarının durumu yükleniyor.</div>
+
+    <section class="panel workspace__engine">
+      <div>
+        <div class="panel__title">Copy Trade <span class="tag tag--info">para katmanı</span></div>
+        <div class="workspace__muted" id="copyMeta">Durum yükleniyor…</div>
+      </div>
+      <div class="panel__actions">
+        <button class="btn" id="refreshCopyBtn">Yenile</button>
+        <button class="btn btn--primary" id="copyToggleBtn">Başlat</button>
+        {% if is_admin %}<button class="btn btn--danger" id="liveToggleBtn">Canlıyı aç</button>{% endif %}
+      </div>
+    </section>
+
+    <section class="workspace__kpis" id="riskKpis"></section>
+
+    <section class="panel workspace__section" id="positionsPanel"><div class="panel__head"><div><div class="panel__title">Pozisyonlar <span class="tag tag--info">motordan gelir</span></div><div class="workspace__muted">Kâğıt ölçüm ayrı, Binance canlı pozisyon ayrı satırdır. Canlı pozisyon yalnızca borsadaki koruyucu stop başarıyla kurulduğunda açık sayılır.</div></div></div><div id="copyTrades"></div></section>
+
+    {# Para ayarlari 29.08'de Ayarlar sayfasindan BURAYA tasindi. Sebep:
+       bunlar sistemin geneli degil, yalnizca bu katman icin gecerli. #}
+    <details class="workspace-disclosure workspace__section"><summary><span><b>Para ve risk ayarları</b><small>Günlük kayıp, işlem riski, kaldıraç ve aynalama sınırları</small></span><span>Ayarları aç</span></summary><div class="workspace-disclosure__body">
+    <form id="copySettingsForm" class="panel workspace__runtime-settings">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Para ve Risk Çerçevesi</div>
+          <div class="workspace__muted">Yalnızca Copy Trade katmanını bağlar. Ana motor bu sayılara bakmadan kurulum bulmaya devam eder.</div>
+        </div>
+        <div class="panel__actions"><span class="workspace__muted" id="copySaveState">Hazır</span><button class="btn btn--primary" type="submit">Kaydet</button></div>
+      </div>
+      <div class="workspace__form-grid">
+        <div class="field"><label class="field__label">Toplam bakiye ($)</label><input class="input" type="number" step="1" min="1" name="risk.total_margin">
+          <div class="workspace__muted">Yalnızca gösterim ve oran hesabı için.</div></div>
+        <div class="field"><label class="field__label">Risk profili</label>
+          <select class="input" name="risk.risk_profile"><option value="conservative">Korumacı</option><option value="balanced">Dengeli</option><option value="aggressive">Agresif</option></select></div>
+        <div class="field"><label class="field__label">İşlem başına max risk ($)</label><input class="input" type="number" step="0.25" min="0.25" name="risk.max_risk_per_trade"></div>
+        <div class="field"><label class="field__label">Günlük kayıp limiti ($)</label><input class="input" type="number" step="0.25" min="0.25" name="risk.daily_loss_limit">
+          <div class="workspace__muted">Bugün <b>gerçekleşmiş</b> zarar bunu aşarsa gün sonuna kadar yeni pozisyon açılmaz.</div></div>
+        <div class="field"><label class="field__label">Pozisyon max margin ($)</label><input class="input" type="number" step="1" min="1" name="risk.max_position_margin"></div>
+        <div class="field"><label class="field__label">Varsayılan kaldıraç</label><input class="input" type="number" step="1" min="1" max="50" name="risk.default_leverage"></div>
+        <div class="field"><label class="field__label">Aynı anda max açık işlem</label><input class="input" type="number" step="1" min="1" max="30" name="copy.max_open_trades"></div>
+        <div class="field"><label class="field__label">Güven eşiği (|t|)</label><input class="input" type="number" step="0.1" min="0" max="10" name="copy.min_t_to_mirror">
+          <div class="workspace__muted">Motor <b>her</b> kurulumu açar ve ölçer. Parayla takip için daha yüksek bir çıta: yalnızca sinyal gücü bunun üstündekiler buraya düşer. <b>0</b> yazarsan çıta kalkar.</div></div>
+        <div class="field"><label class="field__label">Otomatik aynalama</label>
+          <select class="input" name="copy.auto_mirror"><option value="true">Açık</option><option value="false">Kapalı</option></select>
+          <div class="workspace__muted">Kapalıyken motor çalışmaya devam eder, sadece para tarafı durur.</div></div>
+      </div>
+    </form></div></details>
+
+    {% if is_admin %}
+    <details class="workspace-disclosure workspace__section"><summary><span><b>Binance API bağlantısı</b><small>Yalnız yönetici · hassas ve seyrek kullanılan ayarlar</small></span><span>Bağlantıyı aç</span></summary><div class="workspace-disclosure__body">
+    <section class="panel" id="tradingPanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Binance Bağlantısı <span class="tag tag--warn">yönetici</span></div>
+          <div class="workspace__muted">API anahtarı şifrelenerek saklanır ve bir daha gösterilmez. Canlı anahtar açıksa yalnızca yeni TSMOM sinyalleri, risk kapılarını geçtikten sonra Binance Futures'a aynalanır.</div>
+        </div>
+        <div class="panel__actions"><button class="btn" type="button" id="tradeTestBtn">Bağlantıyı test et</button></div>
+      </div>
+
+      <div class="workspace__warning" style="margin-bottom:14px">
+        <b>Anahtarı oluştururken:</b> Binance → API Management → yeni anahtar.
+        <b>Enable Futures</b> açık olmalı. <b>Enable Withdrawals KAPALI</b> olmalı — bu yetki
+        açıkken anahtarı ele geçiren paranı çekebilir. <b>IP kısıtlamasını aç</b> ve sunucunun
+        IP'sini ekle (<code>77.42.28.224</code>). Test butonu bu üçünü de denetliyor.
+        Hesabında elle açılmış bir sembol varsa motor o sembole <b>dokunmaz</b>.
+      </div>
+
+      <div class="workspace__muted" id="tradeState">Durum yükleniyor…</div>
+      <div id="tradeChecks"></div>
+
+      <form class="workspace__form-grid" id="tradeKeyForm" style="margin-top:14px">
+        <div class="field"><label class="field__label">API Key</label><input class="input" name="api_key" type="password" autocomplete="off" spellcheck="false" placeholder="Binance'ten kopyala"></div>
+        <div class="field"><label class="field__label">API Secret</label><input class="input" name="api_secret" type="password" autocomplete="off" spellcheck="false" placeholder="yalnızca oluştururken bir kez gösterilir"></div>
+        <div class="field" style="align-self:end"><button class="btn btn--primary" type="submit" style="width:100%">Anahtarı kaydet</button></div>
+        <div class="field" style="align-self:end"><button class="btn btn--danger" type="button" id="tradeKeyDelete" style="width:100%">Anahtarı sil</button></div>
+      </form>
+    </section></div></details>
+    {% endif %}
+    {% elif page == 'karne' %}
+    <div class="workspace__warning"><b>KÂĞIT SONUÇLARI:</b> Aşağıdaki her sayı motorun kâğıt işlemlerinden gelir. Gerçek emir gönderilmedi.</div>
+    <section class="panel workspace__section" id="scorecardPanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Karne <span class="tag tag--info">kapanmış işlemler</span></div>
+          <div class="workspace__muted">Yalnızca kapanmış işlemlerin sonucu. Açık pozisyonların kâğıt üstündeki kârı buraya girmez — gerçekleşmemiş kâr karne değildir.</div>
+        </div>
+        <div class="panel__actions"><button class="btn" id="selftestBtn">Kendini test et</button></div>
+      </div>
+      <div class="workspace__kpis" id="scoreKpis"></div>
+      <div id="scoreDetail"></div>
+      <div id="selftestBox"></div>
+    </section>
+
+    {% elif page == 'motor' %}
+    <section class="panel workspace__section motor-center" id="motorControlPanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">VORTEX Ana Motor Terminali <span class="tag" id="motorPublishTag">kontrol ediliyor</span></div>
+          <div class="workspace__muted">Tek karar motoru; veri → sıralama → risk → yürütme → bildirim zincirini ayrı ayrı gösterir. Performans ölçümü ayrıca raporlanır.</div>
+        </div>
+        <div class="panel__actions">
+          <button class="btn" id="motorCenterRefresh">Yenile</button>
+        </div>
+      </div>
+      <div class="motor-pipeline" id="motorPipeline"></div>
+      <div class="motor-grid">
+        <div class="motor-card" id="motorValidation"></div>
+        <div class="motor-card" id="motorHealth"></div>
+      </div>
+      <details class="motor-details"><summary>Karar mantığı, RSI adayları ve mimari ayrıntıları</summary><div class="motor-details__body"><div class="motor-grid">
+        <div class="motor-card" id="motorLogic"></div>
+        <div class="motor-card" id="motorRsiLeads"></div>
+      </div>
+      <div class="motor-grid" style="margin-top:12px">
+        <div class="motor-card" id="motorExecution"></div>
+        <div class="motor-card" id="motorArchitecture"></div>
+      </div>
+      <div id="motorRecent"></div></div></details>
+    </section>
+
+    <section class="panel workspace__section"><div class="panel__head"><div><div class="panel__title">TSMOM + Carry <span class="tag tag--info">tek karar motoru</span></div><div class="workspace__muted">Gösterge oylaması yapmaz. Oynaklığa bölünmüş momentumla yönü sıralar; RSI yalnızca aday besler. Fonlama, maliyet, canlı fiyat ve risk kapılarının tamamı geçilmeden paper ya da canlı emir oluşmaz.</div></div><div class="panel__actions"><button class="btn" id="tsmomScanBtn">Şimdi tara</button><button class="btn btn--primary" id="tsmomToggleBtn">Başlat</button></div></div>
+      <div class="workspace__kpis" id="tsmomKpis"></div>
+      <div class="workspace__muted" id="tsmomMeta">Yükleniyor…</div>
+      <div id="tsmomBlocks"></div>
+      <div id="tsmomTop"></div>
+      <div id="tsmomTrades"></div>
+    </section>
+    {# ANA MOTOR AYARLARI. 29.08'e kadar bu ayarlarin HICBIRI panelde
+       duzenlenemiyordu — kullanici motorun sinirlarini goremiyor, dar bir
+       tavana carptiginda sebebini "para bitti" saniyordu. #}
+    <details class="workspace-disclosure workspace__section"><summary><span><b>Gelişmiş motor ayarları</b><small>Strateji eşikleri, tarama evreni, rotasyon ve çıkış disiplini</small></span><span>Ayarları aç</span></summary><div class="workspace-disclosure__body">
+    <form id="tsmomSettingsForm" class="panel workspace__runtime-settings">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Ana Motor Ayarları <span class="tag tag--info">TSMOM</span></div>
+          <div class="workspace__muted">Bunlar <b>strateji</b> sınırları — parayla ilgisi yok. Motor bu sınırlar içinde kurulum arar, bulur, kaydeder ve kapatır. Kaç tanesinin <b>parayla</b> takip edileceği Copy Trade sayfasının işi.</div>
+        </div>
+        <div class="panel__actions"><span class="workspace__muted" id="tsmomSaveState">Hazır</span><button class="btn btn--primary" type="submit">Kaydet</button></div>
+      </div>
+      <div class="workspace__form-grid">
+        <div class="field"><label class="field__label">Aynı anda max açık kayıt</label><input class="input" type="number" min="1" max="200" name="tsmom.max_open">
+          <div class="workspace__muted">Motorun aynı anda izlediği kurulum sayısı. Para sınırı değil.</div></div>
+        <div class="field"><label class="field__label">Aynı yönde max</label><input class="input" type="number" min="1" max="100" name="tsmom.max_per_side">
+          <div class="workspace__muted">Ölçümün tek yöne saplanmaması için. Kripto perp'lerinde korelasyon ~0.48.</div></div>
+        <div class="field"><label class="field__label">Turda max yeni kayıt</label><input class="input" type="number" min="1" max="50" name="tsmom.max_new_per_scan">
+          <div class="workspace__muted">Her tarama ve gözcü turunda en fazla kaç yeni kurulum açılsın.</div></div>
+
+        <div class="field"><label class="field__label">Min. sinyal gücü (|t|)</label><input class="input" type="number" step="0.1" min="0.3" max="5" name="tsmom.min_abs_t">
+          <div class="workspace__muted">Ölçüldü: 0,55 rastgele yürüyüşlerin %53'ünü geçiriyor (filtre değil), 1,0 → %24, 1,5 → %8.</div></div>
+        <div class="field"><label class="field__label">Sinyal / carry ufku (gün)</label><input class="input" type="number" min="1" max="90" name="tsmom.horizon_days">
+          <div class="workspace__muted">Momentum ve fonlama hesabının ufku. Sert pozisyon süresi aşağıda ayrıca sınırlandırılır.</div></div>
+        <div class="field"><label class="field__label">Çıkış eşiği (|t|)</label><input class="input" type="number" step="0.05" min="0" max="3" name="tsmom.exit_t_floor">
+          <div class="workspace__muted">Yöndeki momentum bunun altına düşerse çık.</div></div>
+
+        <div class="field"><label class="field__label">Durgun çıkışı</label>
+          <select class="input" name="tsmom.stale_exit"><option value="true">Açık</option><option value="false">Kapalı</option></select></div>
+        <div class="field"><label class="field__label">Durgun sayılma süresi (gün)</label><input class="input" type="number" min="1" max="90" name="tsmom.stale_days"></div>
+        <div class="field"><label class="field__label">Durgun eşiği (R)</label><input class="input" type="number" step="0.1" min="0" max="3" name="tsmom.stale_max_mfe_r">
+          <div class="workspace__muted">Bu kadar gün açık kalıp lehine bu kadar bile gitmediyse kapat, yeri yeni kuruluma aç.</div></div>
+
+        <div class="field"><label class="field__label">Portföy inceleme döngüsü (saat)</label><input class="input" type="number" step="0.5" min="1" max="48" name="tsmom.rotation_review_hours">
+          <div class="workspace__muted">Her 4 saatte açıkları yeni adaylarla güç açısından karşılaştırır.</div></div>
+        <div class="field"><label class="field__label">Rotasyon</label><select class="input" name="tsmom.rotation_enabled"><option value="true">Açık</option><option value="false">Kapalı</option></select>
+          <div class="workspace__muted">Daha güçlü aday varsa zayıf slotu kapatıp yenisine yer açar; toplam para limitini büyütmez.</div></div>
+        <div class="field"><label class="field__label">Rotasyon için min. pozisyon yaşı (saat)</label><input class="input" type="number" step="0.5" min="1" max="72" name="tsmom.rotation_min_age_hours"></div>
+        <div class="field"><label class="field__label">Rotasyon adayı min. |t|</label><input class="input" type="number" step="0.05" min="0.3" max="5" name="tsmom.rotation_min_candidate_t"></div>
+        <div class="field"><label class="field__label">Gerekli güç farkı (t)</label><input class="input" type="number" step="0.05" min="0.1" max="3" name="tsmom.rotation_min_t_improvement">
+          <div class="workspace__muted">Yeni aday, kapanacak pozisyondan en az bu kadar güçlü olmalı.</div></div>
+        <div class="field"><label class="field__label">Korunan kazanan (R)</label><input class="input" type="number" step="0.1" min="-1" max="5" name="tsmom.rotation_protect_winner_r">
+          <div class="workspace__muted">Bu R seviyesinin üzerindeki kazanan rotasyon için kesilmez.</div></div>
+        <div class="field"><label class="field__label">Sembol tekrar bekleme (saat)</label><input class="input" type="number" step="1" min="0" max="720" name="tsmom.symbol_cooldown_hours">
+          <div class="workspace__muted">Kapanan coin aynı günlük sinyalle hemen yeniden açılamaz.</div></div>
+        <div class="field"><label class="field__label">Aynı yön elit esneme slotu</label><input class="input" type="number" min="0" max="3" name="tsmom.side_flex_slots">
+          <div class="workspace__muted">Yalnız çok güçlü araştırma adayı için. Copy Trade para limiti esnemez.</div></div>
+        <div class="field"><label class="field__label">Sert tutma tavanı (saat)</label><input class="input" type="number" step="1" min="4" max="2160" name="tsmom.max_hold_hours">
+          <div class="workspace__muted">Momentum dönmese bile bu süre sonunda çıkar. Varsayılan 24 saat; 4 saat yalnız inceleme döngüsüdür.</div></div>
+
+        <div class="field"><label class="field__label">Tam tarama aralığı (sn)</label><input class="input" type="number" min="60" max="86400" name="tsmom.scan_interval_seconds"></div>
+        <div class="field"><label class="field__label">Gözcü aralığı (sn)</label><input class="input" type="number" min="10" max="3600" name="tsmom.watch_interval_seconds">
+          <div class="workspace__muted">Çıkışları ve izleme listesini bu sıklıkta kontrol eder.</div></div>
+        <div class="field"><label class="field__label">RSI Radar takibi</label>
+          <select class="input" name="tsmom.rsi_leads_enabled"><option value="true">Açık</option><option value="false">Kapalı</option></select>
+          <div class="workspace__muted">En yüksek/en düşük RSI adaylarını 1 saatlik bağlam analiziyle gözcüye taşır. <b>Tek başına işlem açmaz.</b></div></div>
+        <div class="field"><label class="field__label">RSI taranan evren</label><input class="input" type="number" min="24" max="200" name="tsmom.rsi_leads_universe_size">
+          <div class="workspace__muted">Hacme göre ilk kaç vadeli kontrat RSI radarına girsin.</div></div>
+        <div class="field"><label class="field__label">RSI izleme adayı</label><input class="input" type="number" min="0" max="40" name="tsmom.rsi_leads_limit">
+          <div class="workspace__muted">Saatlik radardan gözcünün sürekli takip edeceği en fazla sembol.</div></div>
+        <div class="field"><label class="field__label">Nötr RSI için min. 1s |t|</label><input class="input" type="number" step="0.1" min="0.5" max="5" name="tsmom.rsi_leads_min_t">
+          <div class="workspace__muted">Aşırı bölgede değilse ancak 1 saatlik trend bu güçteyse aday olur.</div></div>
+        <div class="field"><label class="field__label">Taranan evren</label><input class="input" type="number" min="0" max="500" name="tsmom.universe_size">
+          <div class="workspace__muted">Hacme göre büyükten küçüğe sıralanıp <b>ilk bu kadarı</b> taranır. Evreni asıl belirleyen ayar genelde budur.</div></div>
+        <div class="field"><label class="field__label">Min. 24s hacim (M USDT)</label><input class="input" type="number" step="0.5" min="0.5" max="1000" name="tsmom.min_quote_volume_m">
+          <div class="workspace__muted">Kayma maliyeti taban sınırı. Bu eşiği geçen sembol sayısı "taranan evren"den fazlaysa <b>eşik hiçbir şey elemez</b> — aşağıdaki teşhis hangisinin iş yaptığını söylüyor.</div></div>
+        <div class="field"><label class="field__label">Min. listelenme yaşı (gün)</label><input class="input" type="number" min="30" max="1000" name="tsmom.min_listing_days">
+          <div class="workspace__muted">TSMOM 126 günlük geri bakış + 60 günlük oynaklık penceresi istiyor. Bunun altındaki kontratın hesabı yapılamaz.</div></div>
+
+        <div class="field"><label class="field__label">Stop mesafesi tavanı (%)</label><input class="input" type="number" step="1" min="1" max="60" name="tsmom.max_stop_pct">
+          <div class="workspace__muted">Bunu aşan kurulum elenir. Likidasyon kontrolü burada değil — o Copy Trade'de kaldıracı düşürerek çözülüyor.</div></div>
+        <div class="field"><label class="field__label">Stop mesafesi (ATR ×)</label><input class="input" type="number" step="0.1" min="1" max="6" name="tsmom.stop_atr_mult"></div>
+        <div class="field"><label class="field__label">Hedef (R)</label><input class="input" type="number" step="0.5" min="1" max="12" name="tsmom.target_r"></div>
+      </div>
+    </form></div></details>
+
+    {% elif page == 'test' %}
+    <section class="panel workspace__section" id="testEnginePanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Ölçüm Laboratuvarı <span class="tag tag--warn">işlem motoru değildir</span></div>
+          <div class="workspace__muted">Ana motordan tamamen ayrıdır. 1 saatlik sanal örnekler üretir; paraya, Telegram'a ve TSMOM kararlarına dokunmaz. Tek işi altyapıyı ve parametre varyantlarını ölçmektir.</div>
+        </div>
+        <div class="panel__actions">
+          <button class="btn" id="testCycleBtn">Şimdi çevir</button>
+          <button class="btn btn--primary" id="testToggleBtn">Başlat</button>
+        </div>
+      </div>
+      <div class="workspace__warning" style="margin:0 0 12px">
+        <b>Bu laboratuvarın sonucu ana motorun sonucu değildir.</b> 1 saatlik momentum ile
+        14 günlük momentum farklı stratejilerdir; burada kazanması ana motorun
+        kazanacağı anlamına gelmez. İşe yaradığı yer: makinenin uçtan uca doğru
+        çalıştığını saatler içinde göstermek ve parametrelerin <b>göreceli</b> etkisini ölçmek.
+      </div>
+      <div class="workspace__muted" id="testMeta">Durum yükleniyor…</div>
+      <div id="testEngineBody"></div>
+    </section>
+
+    {% elif page == 'ayarlar' %}
+    <nav class="settings-index" aria-label="Ayar bölümleri">
+      <a href="#settings-account">Hesap</a><a href="#settings-notifications">Bildirimler</a>
+      <a href="#trading-settings">Risk ve bağlantı</a><a href="#settings-advanced">Gelişmiş</a>
+    </nav>
+    <details class="workspace-disclosure workspace__section" id="settings-account" open>
+    <summary><span><b>Hesap</b><small>Profil ve şifre</small></span></summary>
+    <div class="workspace-disclosure__body">
+    <section class="grid grid--2 workspace__settings-grid">
+      <form class="panel stack" id="profileForm"><div class="panel__head"><div class="panel__title">Profil</div></div><div class="field"><label class="field__label">Kullanıcı</label><input class="input" id="settingsUsername" disabled></div><div class="field"><label class="field__label">Görünen ad</label><input class="input" name="display_name" id="settingsDisplay"></div><div class="field"><label class="field__label">E-posta</label><input class="input" name="email" id="settingsEmail" type="email"></div><div class="field"><label class="field__label">Mevcut şifre</label><input class="input" name="current_password" type="password" autocomplete="current-password"></div><div class="field"><label class="field__label">Yeni şifre</label><input class="input" name="new_password" type="password" autocomplete="new-password" minlength="8"></div><button class="btn btn--primary" type="submit">Profili kaydet</button></form>
+    </section></div></details>
+    <details class="workspace-disclosure workspace__section" id="settings-notifications">
+    <summary><span><b>Bildirimler</b><small>Telegram ve telefon</small></span></summary>
+    <div class="workspace-disclosure__body"><section class="grid grid--2 workspace__settings-grid">
+      <form class="panel stack" id="telegramForm"><div class="panel__head"><div class="panel__title">Telegram</div></div><div class="workspace__muted">Token ve Chat ID kullanıcı hesabında saklanır. Alanları boş bırakırsan mevcut değer değiştirilmez.</div><div class="field"><label class="field__label">Bot Token</label><input class="input" name="telegram_token" type="password" autocomplete="off"></div><div class="field"><label class="field__label">Chat ID</label><input class="input" name="telegram_chat_id" autocomplete="off"></div><div class="panel__actions"><button class="btn btn--primary" type="submit">Telegram kaydet</button><button class="btn" type="button" id="testTelegramBtn">Bağlantıyı test et</button></div></form>
+      <div class="panel stack" id="pushPanel"><div class="panel__head"><div><div class="panel__title">Telefon Bildirimleri</div><div class="workspace__muted">Sinyaller doğrudan telefona düşer. Telegram'dan ayrı kanal — burada yalnızca sinyal var, haber/RSI özeti yok.</div></div></div>
+        <div class="workspace__muted" id="pushState">Durum kontrol ediliyor…</div>
+        <div class="panel__actions">
+          <button class="btn btn--primary" type="button" id="pushEnableBtn">Bildirimleri aç</button>
+          <button class="btn" type="button" id="pushTestBtn">Test bildirimi</button>
+          <button class="btn" type="button" id="pushDisableBtn">Kapat</button>
+        </div>
+        <!-- PLAN BILDIRIMI DURUMU.
+             "Neden bildirim gelmiyor" sorusunun tahminle degil olcumle
+             cevaplanmasi icin: hangi kurulum bildirilirdi, hangisi neden
+             elendi. Onizleme HICBIR SEY GONDERMEZ. -->
+        <div class="pbil" id="pbilKutu">
+          <div class="pbil__ust">
+            <span class="pbil__baslik">Kurulum bildirimi</span>
+            <span class="workspace__muted" id="pbilOzet">yükleniyor…</span>
+          </div>
+          <div class="pbil__liste" id="pbilListe"></div>
+          <div class="panel__actions">
+            <button class="btn btn--sm" type="button" id="pbilYenile">Önizle</button>
+            <button class="btn btn--sm" type="button" id="pbilDene">Örnek bildirim gönder</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    </div></details>
+    {% include "_trading_settings.html" %}
+    <details class="workspace-disclosure workspace__section" id="settings-advanced">
+    <summary><span><b>Gelişmiş sistem ayarları</b><small>Eski motor, zamanlayıcılar ve yönetim</small></span></summary>
+    <div class="workspace-disclosure__body">
+    <form id="runtimeSettingsForm" class="workspace__runtime-settings">
+      <section class="panel"><div class="panel__head"><div><div class="panel__title">Motor Yapısı <span class="tag tag--info">tek motor</span></div><div class="workspace__muted">Eski gösterge skoru motoru V2.4.0 ile kaldırıldı. Aktif karar motoru yalnızca <a href="/motor" style="color:var(--ink);text-decoration:underline">TSMOM + Carry</a>; ölçüm laboratuvarı gerçek veya paper emir açamaz.</div></div></div><div class="workspace__form-grid" style="margin-top:14px"><div class="field"><label class="field__label">Bugün Ne Var yönü</label><select class="input" name="mentor_tarama.yon"><option value="LONG">Yalnız LONG</option><option value="SHORT">Yalnız SHORT</option><option value="BOTH">İki yönlü</option></select><div class="workspace__muted">Mentor taramasında hangi yönlerin listeleneceğini belirler. İşlem açma yetkisi vermez; mevcut risk ve maliyet kapıları aynen çalışır.</div></div></div></section>
+
+      <section class="panel"><div class="panel__head"><div><div class="panel__title">Telegram Zamanlayıcıları</div><div class="workspace__muted">0 girilen görev kapanır. İlk kayıt anında spam göndermez; süre dolunca çalışır.</div></div></div><div class="workspace__form-grid">
+        <div class="field"><label class="field__label">Gündem özeti (dk)</label><input class="input" type="number" min="0" max="10080" name="notifications.news_minutes"></div>
+        <div class="field"><label class="field__label">RSI radar özeti (dk)</label><input class="input" type="number" min="0" max="1440" name="notifications.rsi_minutes"></div>
+        <div class="field"><label class="field__label">Otomatik analiz (saat)</label><input class="input" type="number" min="0" max="168" name="notifications.analysis_hours"></div>
+        <div class="field workspace__span-2"><label class="field__label">Analiz sembolleri (virgülle)</label><input class="input" name="notifications.analysis_symbols" placeholder="BTCUSDT,ETHUSDT,XRPUSDT"></div>
+        <label class="workspace__switch"><input type="checkbox" name="notifications.send_signals"><span>Filtreyi geçen motor sinyallerini gönder</span></label>
+        <label class="workspace__switch"><input type="checkbox" name="notifications.send_research"><span>Test işlemi açılışlarını sessiz gönder</span></label>
+      </div></section>
+
+      <section class="panel"><div class="panel__head"><div><div class="panel__title">Eski Terminal Düzeni <span class="tag tag--info">arşiv</span></div><div class="workspace__muted">Önceki terminal görünümü korunuyor fakat artık ana ürün değildir. Mentor ana sayfasındaki karar akışını etkilemez.</div></div><a class="btn btn--sm" href="/terminal">Eski terminali aç</a></div></section>
+      <div class="workspace__savebar"><span id="runtimeSaveState">Çalışma ayarları yükleniyor…</span><button class="btn btn--primary" type="submit">Tüm sistem ayarlarını kaydet</button></div>
+    </form>
+    {% if is_admin %}
+    <section class="panel workspace__section" id="usersPanel">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Kullanıcılar <span class="tag tag--warn">yönetici</span></div>
+          <div class="workspace__muted">Bu bölümü yalnızca yönetici görür. Yeni kullanıcı ekleyebilir, yetki verebilir, şifre sıfırlayabilir ve hesabı pasife alabilirsin.</div>
+        </div>
+        <div class="panel__actions"><button class="btn" type="button" id="usersRefreshBtn">Yenile</button></div>
+      </div>
+
+      <form class="workspace__form-grid" id="userCreateForm" style="margin-bottom:16px">
+        <div class="field"><label class="field__label">Kullanıcı adı</label><input class="input" name="username" required minlength="3" maxlength="48" autocomplete="off" placeholder="kucukharf, boşluksuz"></div>
+        <div class="field"><label class="field__label">Görünen ad</label><input class="input" name="display_name" maxlength="64" autocomplete="off"></div>
+        <div class="field"><label class="field__label">E-posta (opsiyonel)</label><input class="input" name="email" type="email" maxlength="120" autocomplete="off"></div>
+        <div class="field"><label class="field__label">Şifre</label><input class="input" name="password" type="password" required minlength="8" autocomplete="new-password" placeholder="en az 8 karakter"></div>
+        <div class="field"><label class="field__label">Yetki</label><select class="input" name="role"><option value="user">Kullanıcı</option><option value="admin">Yönetici</option></select></div>
+        <div class="field" style="align-self:end"><button class="btn btn--primary" type="submit" style="width:100%">Kullanıcı ekle</button></div>
+      </form>
+
+      <div class="workspace__muted" id="usersMeta">Yükleniyor…</div>
+      <div id="usersTable"></div>
+    </section>
+    {% endif %}
+
+    <section class="panel workspace__section">
+      <div class="panel__head">
+        <div>
+          <div class="panel__title">Sürüm Bilgisi <span class="tag tag--info">V{{ app_version }}</span></div>
+          <div class="workspace__muted">Canlı sistemin gerçekten güncellenip güncellenmediğini buradan kontrol edebilirsin.</div>
+        </div>
+      </div>
+      <div class="workspace__kpis">
+        <div class="workspace__kpi"><span>Uygulama sürümü</span><b>V{{ app_version }}</b></div>
+        <div class="workspace__kpi"><span>Derleme numarası</span><b>{{ build_id }}</b></div>
+        <div class="workspace__kpi"><span>Yayın zamanı</span><b>{{ build_date }}</b></div>
+      </div>
+    </section>
+    </div></details>
+    <section class="panel workspace__section"><div class="panel__head"><div><div class="panel__title">Oturum</div><div class="workspace__muted">Bu cihazdaki VORTEX oturumunu kapatır.</div></div><button class="btn btn--danger" id="logoutBtn">Çıkış yap</button></div></section>
+    {% endif %}
+  </main>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}
+{% if page == 'analiz' %}<script src="/static/vendor/lightweight-charts.standalone.production.js"></script>{% endif %}
+<script>window.VORTEX_PAGE = {{ page|tojson }};</script>
+<script src="/static/js/workspace.js?v={{ build_id }}"></script>
+<script src="/static/js/briefing.js?v={{ build_id }}"></script>
+
+{% if page == 'ayarlar' %}
+<script>
+/* Telefon bildirimleri paneli. workspace.js'ten bagimsiz tutuldu:
+   push akisinin tarayici/isletim sistemi kosullari kendine ozgu ve
+   ana ayar formunun jenerik mantigina karismamasi daha temiz. */
+(function () {
+  const panel = document.getElementById('pushPanel');
+  if (!panel || !window.VortexPush) return;
+  const stateEl = document.getElementById('pushState');
+  const enableBtn = document.getElementById('pushEnableBtn');
+  const testBtn = document.getElementById('pushTestBtn');
+  const disableBtn = document.getElementById('pushDisableBtn');
+
+  const say = (text) => { stateEl.textContent = text; };
+
+  async function refresh() {
+    const st = await window.VortexPush.state();
+    if (!st.supported) {
+      say(st.reason);
+      enableBtn.disabled = true; testBtn.disabled = true; disableBtn.disabled = true;
+      return;
+    }
+    enableBtn.disabled = st.subscribed;
+    testBtn.disabled = !st.subscribed;
+    disableBtn.disabled = !st.subscribed;
+    say(st.subscribed
+      ? 'Açık — bu cihaz sinyalleri bildirim olarak alacak.'
+      : 'Kapalı. "Bildirimleri aç" ile bu cihazı kaydet.');
+  }
+
+  enableBtn.addEventListener('click', async () => {
+    enableBtn.disabled = true; say('İzin isteniyor…');
+    const res = await window.VortexPush.enable();
+    if (res.ok) { VX.toast('Bildirimler açıldı'); }
+    else { VX.toast(res.error, 'err', 9000); say(res.error); }
+    refresh();
+  });
+
+  testBtn.addEventListener('click', async () => {
+    try {
+      const r = await window.VortexPush.test();
+      VX.toast(r.sent ? `Test gönderildi (${r.sent}/${r.total} cihaz)` : (r.error || 'Gönderilemedi'),
+               r.sent ? 'ok' : 'err', 7000);
+    } catch (e) { VX.toast(e.message, 'err', 7000); }
+  });
+
+  disableBtn.addEventListener('click', async () => {
+    await window.VortexPush.disable();
+    VX.toast('Bildirimler kapatıldı');
+    refresh();
+  });
+
+  refresh();
+})();
+</script>
+{% endif %}
+{% endblock %}

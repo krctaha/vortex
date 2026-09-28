@@ -1,0 +1,51 @@
+{# ÜST ŞERİT — yalnız kimlik ve araçlar; gezinme yok.
+
+   Referansta üst şeridin solunda profil, sağında bildirim/arama/ayar
+   duruyor ve ORTASI BOŞ. Boşluk bir eksik değil bir karar: üst şerit
+   sayfanın işi değil, oturumun durumu hakkında.
+
+   Buraya bilerek bir "birincil eylem" düğmesi konmadı. Referanstaki
+   mor "Deposit" düğmesinin burada karşılığı yok — her sayfada geçerli
+   tek bir eylem yok ve olmayan bir eylemi düğme yapmak, basılınca ne
+   olacağı belirsiz bir arayüz demek.
+
+   KİMLİKLER KORUNDU: #modeChip / #modeText (vortex-core dolduruyor),
+   #clock, #avatar, #tnavAra (arama kısayolu), #mobileNavToggle. #}
+<header class="ust">
+
+  <button class="ust__hamburger" id="mobileNavToggle" type="button"
+          aria-controls="ray" aria-expanded="false" aria-label="Menü">
+    <svg class="ust__hb-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M5 7h14M5 12h14M5 17h14"/></svg>
+    <svg class="ust__hb-kapat" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+
+  <a class="ust__profil" href="/ayarlar" title="Profil ve ayarlar">
+    <span class="avatar ust__avatar" id="avatar">–</span>
+    <span class="ust__kim">
+      <i id="ustKullanici">@—</i>
+      <b id="ustAd">…</b>
+    </span>
+    <span class="ust__rol" id="ustRol">·</span>
+    <svg class="ust__cev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+  </a>
+
+  <div class="ust__bosluk"></div>
+
+  <button class="ust__ara" id="tnavAra" type="button" title="Sembol ara ( / )">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.2-3.2"/></svg>
+    <span>Sembol ara</span><i class="ust__kbd">/</i>
+  </button>
+
+  <span class="chip ust__durum" id="modeChip"><span class="dot dot--pulse"></span><span id="modeText">bağlanıyor</span></span>
+
+  <span class="ust__saat" id="clock">--:--:--</span>
+
+  <a class="ust__ikon" href="/ayarlar#pushPanel" title="Bildirimler" aria-label="Bildirimler">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 10-12 0c0 7-3 8-3 8h18s-3-1-3-8"/><path d="M13.7 21a2 2 0 01-3.4 0"/></svg>
+    <i class="ust__nokta" id="ustBildirimNokta" hidden></i>
+  </a>
+
+  <a class="ust__ikon" href="/ayarlar" title="Ayarlar" aria-label="Ayarlar">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 11-4 0v-.1A1.7 1.7 0 008.9 19a1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 110-4h.1A1.7 1.7 0 004.6 8.9a1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 114 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 110 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+  </a>
+</header>

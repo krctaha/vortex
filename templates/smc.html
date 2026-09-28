@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}VORTEX · SMC Çalışma Masası{% endblock %}
+{% block styles %}
+<link rel="stylesheet" href="/static/css/workspace.css?v={{ build_id }}">
+<link rel="stylesheet" href="/static/css/workspace-live.css?v={{ build_id }}">
+{% endblock %}
+{% block body %}
+<div class="app">
+  {% include "_ray.html" %}
+  <div class="icerik">
+    {% include "_ustbar.html" %}
+    <main class="main workspace smc-desk" data-page="smc" data-bundle="smc">
+      <header class="smc-desk__header">
+        <div><span class="workspace__eyebrow">VORTEX / PİYASA YAPISI</span>
+        <h1>SMC Çalışma Masası</h1><p>Yönü oku. Likiditeyi izle. Teyidi bekle.</p></div>
+        <button class="btn btn--primary" type="button" id="smcScan">Piyasayı tara</button>
+      </header>
+      <div class="smc-desk__metrics">
+        <div><span>Analiz modeli</span><b>SMC / ICT</b><small>4 saat bağlam · 15 dakika kurulum</small></div>
+        <div><span>İzlenen / hazır</span><b id="smcCounts">—</b><small id="smcTime">Henüz tarama yok</small></div>
+        <div><span>Çalışma modu</span><b>Araştırma</b><small id="smcData">Canlı emir yetkisi kapalı</small></div>
+      </div>
+      <div class="smc-desk__layout">
+        <section class="panel">
+          <div class="panel__head"><div class="panel__title">Kurulum listesi</div><span class="tag">4H → 15M</span></div>
+          <p class="workspace__muted">Koşul skoru başarı olasılığı değildir. Eksik teyitler sağda görünür.</p>
+          <div id="smcCandidates" aria-live="polite"><div class="empty">Piyasayı tara veya bir sembolü incele.</div></div>
+        </section>
+        <section class="panel">
+          <form id="smcForm" class="smc-desk__search">
+            <label for="smcSymbol">Sembol</label><input class="input" id="smcSymbol" value="BTCUSDT" required pattern="[A-Za-z0-9]{3,24}" maxlength="24">
+            <button class="btn" type="submit">İncele</button>
+          </form>
+          <div id="smcDetail" aria-live="polite"><div class="empty">Bir kurulum seç. Teyit sırası ve planı burada incele.</div></div>
+        </section>
+      </div>
+      <footer class="smc-desk__footer"><span>SMC araştırma sürümü · Kârlılık henüz ölçülmedi</span><a href="/mentor">Mentor araçları</a><a href="/motor">Eski TSMOM motoru</a><a href="/ayarlar">Ayarlar</a></footer>
+    </main>
+  </div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="/static/js/smc-desk.js?v={{ build_id }}"></script>{% endblock %}
