@@ -1,0 +1,42 @@
+const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+const fs=require('fs');
+(async()=>{
+  const credentials=JSON.parse(fs.readFileSync(0,'utf8'));
+  const browser=await chromium.launch({headless:true,channel:'chrome'});
+  const context=await browser.newContext({viewport:{width:1440,height:1100},acceptDownloads:true});
+  const login=await context.request.post('http://127.0.0.1:18765/api/auth/login',{data:credentials});
+  if(!login.ok())throw Error('Login failed');
+  const page=await context.newPage(),errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:18765/');
+  await page.locator('#priceChart svg').waitFor({timeout:60000});
+  await page.waitForFunction(()=>document.querySelector('#marketCount').textContent==='200 / 200');
+  if(await page.locator('#rayMenu a[href="/portfoy"],#rayMenu a[href="/motor"],#rayMenu a[href="/makro"],#rayMenu a[href="/sistem-testi"]').count())throw Error('Retired menu remains');
+  await page.waitForFunction(()=>document.querySelector('#streamLatency').textContent.includes('son işlem yaşı'),{},{timeout:60000});
+  console.log('Stream:',await page.locator('#streamLatency').innerText());
+  if(await page.evaluate(()=>document.querySelector('.dashboard').getBoundingClientRect().right>innerWidth+2))throw Error('Desktop content clipped');
+  await page.screenshot({path:'qa/terminal-desktop.png',fullPage:true});
+  await page.locator('#gainers').scrollIntoViewIfNeeded();
+  await page.screenshot({path:'qa/movers-desktop.png',fullPage:true});
+  const above=await page.evaluate(()=>document.querySelector('#plans').getBoundingClientRect().top<document.querySelector('.dash-stats').getBoundingClientRect().top);
+  if(!above)throw Error('Plans must be first');
+  await page.setViewportSize({width:390,height:844});
+  await page.reload();await page.locator('#priceChart svg').waitFor({timeout:60000});
+  if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2))throw Error('Mobile overflow');
+  await page.screenshot({path:'qa/terminal-mobile.png',fullPage:true});
+  await page.goto('http://127.0.0.1:18765/islem-karnesi');await page.locator('#journalStats article').first().waitFor();
+  await page.goto('http://127.0.0.1:18765/global-piyasalar');await page.locator('#crossWatch div').first().waitFor();
+  await page.goto('http://127.0.0.1:18765/ayarlar');await page.waitForFunction(expected=>document.querySelector('#settingsUsername').value===expected,credentials.username);
+  await page.screenshot({path:'qa/settings-v3-mobile.png',fullPage:true});
+  await page.setViewportSize({width:1440,height:1100});
+  await page.goto('http://127.0.0.1:18765/analiz');
+  await page.locator('#chartScreenshotBtn:not([disabled])').waitFor({timeout:60000});
+  const download=page.waitForEvent('download');await page.locator('#downloadChart').click();const file=await download;
+  if(!file.suggestedFilename().endsWith('.png'))throw Error('Chart download failed');
+  await page.screenshot({path:'qa/share-analysis.png',fullPage:true});
+  for(const route of ['/portfoy','/motor','/sistem-testi','/makro','/karne']){
+    const r=await context.request.get('http://127.0.0.1:18765'+route,{maxRedirects:0});if(r.status()!==302)throw Error('Retired page not redirected');
+  }
+  console.log(JSON.stringify({pageErrors:errors,pages:6,websocket:true,mobile:true,download:true,retiredRoutes:true}));
+  await browser.close();if(errors.length)process.exitCode=1;
+})().catch(e=>{console.error(e.message);process.exit(1)});

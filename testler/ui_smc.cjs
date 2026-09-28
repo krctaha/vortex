@@ -1,0 +1,36 @@
+const { chromium } = require(process.env.PLAYWRIGHT_PATH || "playwright");
+const fs = require("fs");
+(async () => {
+  const browser = await chromium.launch({headless: true, channel: process.env.BROWSER_CHANNEL || "chrome"});
+  const page = await browser.newPage({viewport:{width:1440,height:1050}});
+  const errors = [];
+  page.on("pageerror", error => errors.push(error.message));
+  fs.mkdirSync("qa", {recursive:true});
+  await page.goto("http://127.0.0.1:18765/preview-session");
+  await page.getByRole("button", {name:"İncele",exact:true}).click();
+  await page.locator("#smcDetail h2").waitFor();
+  await page.getByRole("button", {name:"Piyasayı tara",exact:true}).click();
+  await page.getByRole("button", {name:"Piyasayı tara",exact:true}).waitFor();
+  await page.screenshot({path:"qa/smc-desktop.png", fullPage:true});
+  await page.setViewportSize({width:390,height:844});
+  await page.waitForFunction(() => document.querySelector("#ray").getBoundingClientRect().right <= 1);
+  await page.screenshot({path:"qa/smc-mobile.png", fullPage:true});
+  if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 2)) throw Error("SMC mobile overflow");
+  await page.goto("http://127.0.0.1:18765/ayarlar");
+  await page.locator("#settingsUsername").waitFor();
+  await page.locator("#settingsUsername").evaluate(async el => {
+    for(let i=0; i<50 && !el.value; i++) await new Promise(r=>setTimeout(r,100));
+  });
+  await page.locator("#settings-notifications > summary").click();
+  await page.locator("#telegramForm").waitFor({state:"visible"});
+  await page.evaluate(() => { document.querySelector(".icerik").scrollTop = 0; window.scrollTo(0,0); });
+  await page.screenshot({path:"qa/settings-mobile.png",fullPage:true});
+  await page.setViewportSize({width:1440,height:1050});
+  await page.screenshot({path:"qa/settings-desktop.png",fullPage:true});
+  await page.goto("http://127.0.0.1:18765/analiz");
+  await page.locator("#smcFlow .smc-flow__summary").waitFor({timeout:30000});
+  await page.screenshot({path:"qa/analysis-desktop.png",fullPage:true});
+  console.log(JSON.stringify({pageErrors:errors, screenshots:"qa/"}));
+  await browser.close();
+  if(errors.length) process.exitCode=1;
+})().catch(error=>{console.error(error); process.exit(1)});

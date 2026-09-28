@@ -1,0 +1,33 @@
+// Credentials supplied over stdin, never saved in test source or screenshots.
+const {chromium} = require(process.env.PLAYWRIGHT_PATH || 'playwright');
+const fs = require('fs');
+(async()=>{
+  const credentials=JSON.parse(fs.readFileSync(0,'utf8'));
+  const browser=await chromium.launch({headless:true,channel:'chrome'});
+  const context=await browser.newContext({viewport:{width:1440,height:1100}});
+  const login=await context.request.post('http://127.0.0.1:18765/api/auth/login',{data:credentials});
+  if(!login.ok()) throw Error('Login failed');
+  const page=await context.newPage(), errors=[];
+  page.on('pageerror',e=>errors.push(e.message));
+  await page.goto('http://127.0.0.1:18765/');
+  await page.locator('#priceChart svg').waitFor({timeout:60000});
+  await page.waitForFunction(()=>document.querySelector('#marketCount').textContent==='200 / 200');
+  await page.screenshot({path:'qa/dashboard-desktop.png',fullPage:true});
+  await page.locator('.dash-watch summary').click();
+  if(await page.locator('#watchlist tbody tr').count()!==200)throw Error('Expected 200 unique markets');
+  await page.locator('#marketSearch').fill('BTCUSDT');
+  if(await page.locator('#watchlist tbody tr').count()!==1)throw Error('Search failed');
+  await page.locator('#chartSymbol').selectOption('ETHUSDT');
+  await page.locator('#priceChart svg[aria-label^="ETHUSDT"]').waitFor();
+  await page.setViewportSize({width:390,height:844});
+  await page.waitForTimeout(500);
+  await page.evaluate(()=>{document.querySelectorAll('*').forEach(el=>{if(el.scrollTop)el.scrollTop=0;});window.scrollTo(0,0);});
+  await page.screenshot({path:'qa/dashboard-mobile.png',fullPage:true});
+  if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2))throw Error('Mobile overflow');
+  await page.route('**/api/engine/smc/dashboard',r=>r.fulfill({status:503,contentType:'application/json',body:'{"detail":"test outage"}'}));
+  await page.locator('#dashError').waitFor({state:'visible',timeout:20000});
+  if(!(await page.locator('#plans').innerText()).includes('gizlendi'))throw Error('Outage must hide plans');
+  console.log(JSON.stringify({pageErrors:errors,markets:200,search:true,chartSwitch:true,mobile:true,outage:true}));
+  await browser.close();
+  if(errors.length)process.exitCode=1;
+})().catch(e=>{console.error(e.message);process.exit(1)});

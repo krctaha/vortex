@@ -1,0 +1,42 @@
+const {chromium}=require(process.env.PLAYWRIGHT_PATH||'playwright');
+const fs=require('fs');
+(async()=>{
+ const browser=await chromium.launch({headless:true,channel:'chrome'});
+ try{
+  const base=process.env.VORTEX_TEST_URL||'http://127.0.0.1:18765';
+  const context=await browser.newContext({viewport:{width:390,height:844},isMobile:true,hasTouch:true,deviceScaleFactor:3});
+  const login=await context.request.post(base+'/api/auth/login',{data:JSON.parse(fs.readFileSync(0,'utf8'))});
+  if(!login.ok())throw Error('Login failed');
+  const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
+  await page.goto(base+'/');
+  await page.locator('#todayPlanSummary').waitFor();
+  await page.waitForFunction(()=>window.VX?.live?.serverOffsetMs!==null&&window.VX?.live?.ticks?.BTCUSDT,null,{timeout:15000});
+  const stream=await page.evaluate(()=>({offset:VX.live.serverOffsetMs,age:VX.live.age(VX.live.ticks.BTCUSDT)}));
+  if(!Number.isFinite(stream.age)||stream.age>10000)throw Error('Live stream tick stale: '+JSON.stringify(stream));
+  const before=await page.evaluate(()=>({viewport:innerWidth,height:innerHeight,body:document.body.scrollHeight,main:document.querySelector('.main').scrollHeight,client:document.querySelector('.main').clientHeight,menu:getComputedStyle(document.querySelector('.ray')).transform}));
+  if(await page.locator('#mobileNavToggle').isVisible())throw Error('Obsolete drawer toggle visible');
+  const nav=await page.locator('#ray').boundingBox();
+  if(nav.y>20||nav.width<350||nav.height>70)throw Error('Text navigation not at top');
+  const link=page.locator('#rayMenu a[href="/islem-karnesi"]');
+  await link.click();
+  await page.waitForURL('**/islem-karnesi');
+  if(await page.locator('body').evaluate(el=>el.classList.contains('mobile-nav-open')))throw Error('Obsolete drawer state');
+  await page.goto(base+'/');
+  const summary=page.locator('#todayPlanSummary');
+  await summary.scrollIntoViewIfNeeded();
+  const pending=page.locator('details:has(#pendingRecords)');
+  await pending.locator('summary').click();
+  if(!await pending.evaluate(el=>el.open))throw Error('Pending list did not open');
+  const markets=page.locator('details.dash-watch');
+  await markets.locator('summary').click();
+  if(!await markets.evaluate(el=>el.open))throw Error('Market list did not open');
+  await page.setViewportSize({width:320,height:420});
+  const menu=await page.locator('#rayMenu').evaluate(el=>({width:el.clientWidth,scroll:el.scrollWidth,touch:getComputedStyle(el).touchAction}));
+  if(menu.scroll>menu.width && menu.touch!=='pan-x')throw Error('Top menu cannot touch-scroll');
+  if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth+2))throw Error('Mobile page overflow');
+  const after=await page.evaluate(()=>({viewport:innerWidth,height:innerHeight,body:document.body.scrollHeight,main:document.querySelector('.main').scrollHeight,client:document.querySelector('.main').clientHeight}));
+  console.log(JSON.stringify({before,after,menu,stream,errors}));
+  if(errors.length)throw Error(errors.join('\n'));
+  console.log('PASS: mobile top text navigation, expandable lists and scrolling');
+ }finally{await browser.close();}
+})().catch(e=>{console.error(e.message);process.exitCode=1;});
